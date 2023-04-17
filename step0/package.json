@@ -1,0 +1,65 @@
+{
+  "name": "jukebox",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "electron-esbuild dev",
+    "build": "electron-esbuild build",
+    "package": "electron-builder"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.2.10",
+    "@types/node": "16.x",
+    "aws-sdk": "^2.1314.0",
+    "electron": "22.x",
+    "electron-builder": "23.x",
+    "electron-esbuild": "^7.0.0",
+    "electron-util": "0.17.x",
+    "esbuild": "0.16.x",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.3.0",
+    "node-pre-gyp": "0.12.0",
+    "typescript": "4.9.x"
+  },
+  "build": {
+    "appId": "io.comp.myapp",
+    "productName": "jukebox",
+    "extraMetadata": {
+      "name": "jukebox",
+      "main": "main.js"
+    },
+    "files": [
+      {
+        "from": ".",
+        "filter": [
+          "package.json"
+        ]
+      },
+      {
+        "from": "dist/main"
+      }
+    ],
+    "win": {
+      "target": [
+        "zip"
+      ]
+    },
+    "mac": {
+      "target": [
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "zip"
+      ]
+    },
+    "directories": {
+      "buildResources": "resources"
+    },
+    "publish": null
+  },
+  "dependencies": {
+    "better-sqlite3": "^8.1.0"
+  }
+}
