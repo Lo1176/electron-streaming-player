@@ -9,4 +9,11 @@ contextBridge.exposeInMainWorld('versions', {
 
     return rows
   },
+  findAlbumsByArtist: () => {
+    const rows = db.prepare("SELECT * FROM  albums ORDER BY artist_id;").all()
+    // console.log("albums by artist", rows)
+
+    return rows
+  }
+
 })
