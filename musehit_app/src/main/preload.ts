@@ -4,9 +4,7 @@ const db = require('better-sqlite3')('./resources/jukebox.db');
 contextBridge.exposeInMainWorld('versions', {
   findAllSongs: () => {
     const rows = db.prepare("select * from songs").all()
-
-    console.log("I searched all songs")
-
+    // console.log("I searched all songs")
     return rows
   },
   findAlbumsByArtist: () => {
@@ -17,7 +15,7 @@ contextBridge.exposeInMainWorld('versions', {
 
   findAllSongsByAlbumID: (id) => {
     const rows = db.prepare(`SELECT * FROM  songs WHERE album_id = ${id};`).all()
-    console.log(`songs from album_id ${id}`, rows[0].name)
+    // console.log(`songs from album_id ${id}`, rows[0].name)
     return rows
   }
 
