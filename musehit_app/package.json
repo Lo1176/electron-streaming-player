@@ -4,6 +4,7 @@
   "main": "dist/main.js",
   "scripts": {
     "dev": "electron-esbuild dev",
+    "dev:nodemon": "nodemon --watch src/renderer/index.html --watch src/renderer/renderer.ts --exec yarn dev",
     "build": "electron-esbuild build",
     "package": "electron-builder"
   },
@@ -19,6 +20,7 @@
     "mock-aws-s3": "^4.0.2",
     "nock": "^13.3.0",
     "node-pre-gyp": "0.12.0",
+    "nodemon": "^2.0.22",
     "typescript": "4.9.x"
   },
   "build": {

@@ -7,19 +7,26 @@ const displayAlbumSongsNames = (album_id) => {
   containerSongsList.innerHTML = ""; // reset div before feeding it
   const ulSongs = document.createElement("ul"); // create ul element and set its attributes.
   ulSongs.setAttribute("id", "theSongList"); //   ulSongs.setAttribute("style", "padding: 4px; margin: 0;");
-
+// <figure>
+//   <figcaption>Listen to the T-Rex:</figcaption>
+//   <audio controls src="/media/cc0-audio/t-rex-roar.mp3">
+//     <a href="/media/cc0-audio/t-rex-roar.mp3">Download audio</a>
+//   </audio>
+// </figure>;
   const li = document.createElement("li"); // create li element.
   const songs = versions.findAllSongsByAlbumID(album_id);
   for (let j = 0; j < songs.length; j++) {
-    li.innerHTML +=
-      `<a 
-        id="songs_${j}" 
-        href="./../public/uploads/${songs[j].path}">"${songs[j].name} ▶️ "</a>` + "<br>";
+    li.innerHTML += `
+    <figcaption>${songs[j].name}:</figcaption>
+    <audio id="audioPlayer" controls src="./../public/uploads/${songs[j].path}">"${songs[j].name}">
+    Your browser does not support the audio element.
+         <a href="./../public/uploads/${songs[j].path}">"${songs[j].name} ▶️ "</a>
+        </audio>
+    `;
     li.setAttribute("style", "display: block;"); // remove the bullets.
   }
 
   ulSongs.appendChild(li); // append li to ul.
-
   containerSongsList.appendChild(ulSongs); // add ul to the container.
 };
 
@@ -41,3 +48,13 @@ for ( let i = 0; i < ALBUMS.length; i++) {
     ulAlbums.appendChild(li);		// append li to ulAlbums.
 }
 albumContainer.appendChild(ulAlbums);		// add ul to the albumContainer.
+
+/** function to play next song at the end of the previous one */
+
+const playNextSong = () => {
+  const audioPlayer = document.getElementById("audioPlayer");
+  audioPlayer.addEventListener('ended',function(){
+      console.log("this song is finished")
+  });
+
+}
