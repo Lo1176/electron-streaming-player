@@ -1,32 +1,29 @@
 // find all ALBUMS
 const ALBUMS = versions.findAlbumsByArtist();
+const containerSongsList = document.getElementById("songs-list"); // display songs names
+const audioPlayer = document.getElementById("audioPlayer");
 
+/** function to pay a song */
+const playThisSong = (songPath) => {
+  audioPlayer.src = `./../public/uploads/${songPath}`;
+}
 /** function to display album' songs */
 const displayAlbumSongsNames = (album_id) => {
-  const containerSongsList = document.getElementById("songs-list"); // display songs names
   containerSongsList.innerHTML = ""; // reset div before feeding it
   const ulSongs = document.createElement("ul"); // create ul element and set its attributes.
   ulSongs.setAttribute("id", "theSongList"); //   ulSongs.setAttribute("style", "padding: 4px; margin: 0;");
-// <figure>
-//   <figcaption>Listen to the T-Rex:</figcaption>
-//   <audio controls src="/media/cc0-audio/t-rex-roar.mp3">
-//     <a href="/media/cc0-audio/t-rex-roar.mp3">Download audio</a>
-//   </audio>
-// </figure>;
-  const li = document.createElement("li"); // create li element.
+
+  const divSong = document.createElement("div"); // create div element.
   const songs = versions.findAllSongsByAlbumID(album_id);
-  for (let j = 0; j < songs.length; j++) {
-    li.innerHTML += `
-    <figcaption>${songs[j].name}:</figcaption>
-    <audio id="audioPlayer" controls src="./../public/uploads/${songs[j].path}">"${songs[j].name}">
-    Your browser does not support the audio element.
-         <a href="./../public/uploads/${songs[j].path}">"${songs[j].name} ▶️ "</a>
-        </audio>
-    `;
-    li.setAttribute("style", "display: block;"); // remove the bullets.
+  // console.log(songs) // songs = array d'object [{}, {}, ..., {}]
+  // list all songs
+  for (let i = 0; i < songs.length; i++) {
+    const figcaption = document.createElement("figcaption"); // create li element.
+    figcaption.innerText += `${songs[i].name} `;
+    figcaption.addEventListener("click", () => playThisSong(songs[i].path));
+    ulSongs.appendChild(figcaption); // append li to ul.
   }
 
-  ulSongs.appendChild(li); // append li to ul.
   containerSongsList.appendChild(ulSongs); // add ul to the container.
 };
 
@@ -40,7 +37,7 @@ ulAlbums.setAttribute('id', 'theAlbumList');
 for ( let i = 0; i < ALBUMS.length; i++) {
     const li = document.createElement('li');	// create li element.
 
-    li.innerHTML = `<a id="myLink" title="Click to do something"
+    li.innerHTML = `<a id="album" title="Click to open this album"
     href="#album">${ALBUMS[i].name}</a>`;	// assigning text to li using array value.
     li.setAttribute ('style', 'display: block;');	// remove the bullets.
     li.addEventListener("click", () => { displayAlbumSongsNames(ALBUMS[i].id);});
@@ -49,12 +46,13 @@ for ( let i = 0; i < ALBUMS.length; i++) {
 }
 albumContainer.appendChild(ulAlbums);		// add ul to the albumContainer.
 
-/** function to play next song at the end of the previous one */
 
-const playNextSong = () => {
-  const audioPlayer = document.getElementById("audioPlayer");
+/** function to play next song at the end of the previous one */
+// const playNextSong = () => {
   audioPlayer.addEventListener('ended',function(){
       console.log("this song is finished")
   });
-
-}
+// }
+// audioPlayer.onplay = function () {
+//   alert("The video has started to play");
+// };
