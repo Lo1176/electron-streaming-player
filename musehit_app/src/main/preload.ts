@@ -13,7 +13,7 @@ contextBridge.exposeInMainWorld('versions', {
     return rows
   },
 
-  findAllSongsByAlbumID: (id) => {
+  findAllSongsByAlbumID: (id: any) => {
     const rows = db.prepare(`SELECT * FROM  songs WHERE album_id = ${id};`).all()
     // console.log(`songs from album_id ${id}`, rows[0].name)
     return rows
