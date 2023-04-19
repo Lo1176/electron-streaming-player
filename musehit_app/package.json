@@ -1,10 +1,10 @@
 {
-  "name": "jukebox",
+  "name": "musehit",
   "version": "1.0.0",
   "main": "dist/main.js",
   "scripts": {
     "dev": "electron-esbuild dev",
-    "dev:nodemon": "nodemon --watch src/renderer/index.html --watch src/renderer/renderer.ts --exec yarn dev",
+    "start": "nodemon --watch src/renderer/index.html --watch src/renderer/renderer.ts --exec yarn dev",
     "build": "electron-esbuild build",
     "package": "electron-builder"
   },
@@ -25,9 +25,9 @@
   },
   "build": {
     "appId": "io.comp.myapp",
-    "productName": "jukebox",
+    "productName": "musehit",
     "extraMetadata": {
-      "name": "jukebox",
+      "name": "musehit",
       "main": "main.js"
     },
     "files": [
