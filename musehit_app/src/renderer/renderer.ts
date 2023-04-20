@@ -69,7 +69,11 @@ const displayAlbumSongsNames = ({id: album_id}) => {
   for (let i = 0; i < songs.length; i++) {
     const divSong = document.createElement("div");
     divSong.innerText += `${songs[i].name} `;
-    divSong.addEventListener('click', () => {console.log("song ", songs[i]), playThisSong(songs.position = songs[i]);});
+    divSong.addEventListener('click', () => {
+      console.log("song ", songs[i]), 
+      playThisSong(songs.position = songs[i])
+      // console.log("CACHES ",caches.open)  
+    });
     // divSong.addEventListener("click", () => { playThisSong(versions.findSong(album_id, (songs.position = i)));
     
     
@@ -113,21 +117,25 @@ const playPauseFctn = () => {
 
 /** function to pay a song */
 const playThisSong = (song: any) => {
-  // song position for song path
-  // console.log("🚀 ~ file: renderer.ts:72 ~ isAudioPlaying before playThisSong? ", isAudioPlaying);
-
   audioPlayer.src = `./../public/uploads/${song.path}`;
   audioPlayer.classList.add("play");
   playPauseFctn();
-  // audioPlayer.classList.add('play')
-  // audioPlayer.play()
-  // console.log("🚀 ~ file: renderer.ts:72 ~ isAudioPlaying after playThisSong? ", isAudioPlaying);
 
   // if ended go to next song
   // audioPlayer.addEventListener("ended", () => {
   //   nextSong(song);
   // });
-  PLAYER
+  // PLAYER
+  nextBtn.addEventListener("click", () => {
+    // if (is audio is not playing do nothing)
+    // else
+    nextSong(song);
+  });
+  prevBtn.addEventListener("click", () => {
+    // if (is audio is not playing do nothing)
+    // else
+    prevSong(song);
+  });
 
 };
 
@@ -145,8 +153,18 @@ function nextSong(song) {
     const songs = versions.findAllSongsByAlbumID(song.album_id);
     const megaToto = songs.filter((toto) => toto["position"] === song["position"])
     playThisSong(megaToto[0])
-
   }
+};
 
+// Prev song
+function prevSong(song) {
+  if (song["position"] > 2) song["position"] -= 1;  
+  if (song.position > totalTracks - 1) {
+    audioPlayer.pause();
+  } else {
+    const songs = versions.findAllSongsByAlbumID(song.album_id);
+    const megaToto = songs.filter((toto) => toto["position"] === song["position"])
+    playThisSong(megaToto[0])
+  }
 };
 
