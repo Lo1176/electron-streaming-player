@@ -4,6 +4,36 @@ const albums = versions.findAlbumsByArtist();
 
 const containerSongsList = document.getElementById("songs-list");
 const audioPlayer = document.getElementById("audioPlayer");
+/************ PLAYER INFOS ***************/
+const PLAYER = console.log(
+  "🚀 ~ PLAYER_INFO ~ ",
+  "audioPlayer.paused:",
+  audioPlayer.paused,
+  "audioPlayer.currentTime:",
+  audioPlayer.currentTime,
+  "audioPlayer.ended:",
+  audioPlayer.ended,
+  "audioPlayer.readyState:",
+  audioPlayer.readyState
+);
+/**************** END ******************/
+const isAudioPlaying = 
+  (
+    // audioPlayer.currentTime > 0 &&
+    !audioPlayer.paused &&
+    !audioPlayer.ended 
+    // audioPlayer.readyState > 2
+  );
+// console.log("🚀 ~ file: renderer.ts:72 ~ isAudioPlaying? ", isAudioPlaying);
+
+
+
+const playBtn = document.getElementById("play");
+const playIcon = "▶️";
+const pauseIcon = "||"
+playBtn.innerHTML = `<i>${playIcon}</i>`;
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
 
 /** display albums name on Homepage */
 const albumContainer = document.getElementById('albumContainer');
@@ -19,7 +49,6 @@ for ( let i = 0; i < albums.length; i++) {
     href="#album">${albums[i].name}</a>`;
     li.setAttribute ('style', 'display: block;');
     li.addEventListener("click", () => { displayAlbumSongsNames(albums[i]);});
-    // console.log("🚀 ~ file: renderer.ts:68 ~ albums[i]:", albums[i])
 
     allAlbums.appendChild(li);
 }
@@ -55,17 +84,51 @@ const displayAlbumSongsNames = ({id: album_id}) => {
   return totalTracks;
 };
 
+playBtn.addEventListener("click", () => {
+  // if no song loaded => nothing appends
+  // else
+  // audioPlayer.onplaying = () => playPauseFctn();
+  playPauseFctn();
+  
+});
+
+
+// audioPlayer.onpause = () => {audioPlayer.onpause ? console.log('pause = true') : console.log("pause = false")}
+
+const playPauseFctn = () => {
+  if (audioPlayer.classList.contains("play")) {
+    audioPlayer.classList.remove("play"),
+    audioPlayer.classList.add("pause"),
+    playBtn.innerHTML = `<i>${pauseIcon}</i>`,
+    audioPlayer.play()
+  } else {
+    audioPlayer.classList.remove("pause"),
+    audioPlayer.classList.add("play"),
+    playBtn.innerHTML = `<i>${playIcon}</i>`,
+    audioPlayer.pause()
+  }
+}
+
+
+
 /** function to pay a song */
 const playThisSong = (song: any) => {
-  // console.log("🚀 ~ file: renderer.ts:8 ~ playThisSong ~ song:", song);
   // song position for song path
-  audioPlayer.src = `./../public/uploads/${song.path}`;
-  // console.log("id?: ",song.id)
+  // console.log("🚀 ~ file: renderer.ts:72 ~ isAudioPlaying before playThisSong? ", isAudioPlaying);
 
-  audioPlayer.addEventListener("ended", () => {
-    console.log(`this song ${song.name} is finished`);
-    nextSong(song);
-  });
+  audioPlayer.src = `./../public/uploads/${song.path}`;
+  audioPlayer.classList.add("play");
+  playPauseFctn();
+  // audioPlayer.classList.add('play')
+  // audioPlayer.play()
+  // console.log("🚀 ~ file: renderer.ts:72 ~ isAudioPlaying after playThisSong? ", isAudioPlaying);
+
+  // if ended go to next song
+  // audioPlayer.addEventListener("ended", () => {
+  //   nextSong(song);
+  // });
+  PLAYER
+
 };
 
 // Next song
@@ -75,8 +138,9 @@ function nextSong(song) {
   console.log("🚀 ~ file: renderer.ts:71 ~ position_AFTER: ", song.position);
 
   console.log("🚀 ~ file: renderer.ts:78 ~ nextSong ~ totalTracks:", totalTracks)
+  
   if (song.position > totalTracks - 1) {
-    audioPlayer.pause;
+    audioPlayer.pause();
   } else {
     const songs = versions.findAllSongsByAlbumID(song.album_id);
     const megaToto = songs.filter((toto) => toto["position"] === song["position"])
