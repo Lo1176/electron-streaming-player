@@ -28,14 +28,14 @@ const isAudioPlaying =
 
 
 const playBtn = document.getElementById("play");
-const playIcon = "▶️";
-const pauseIcon = "||"
-playBtn.innerHTML = `<i>${playIcon}</i>`;
+const playIcon = "./../src/images/play-btn.svg";
+const pauseIcon = "./../src/images/pause-btn.svg";
+// playBtn.innerHTML = `<i>${playIcon}</i>`;
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 
 /** display albums name on Homepage */
-const albumContainer = document.getElementById('albumContainer');
+const albumContainer = document.getElementById("page-sidebar__album-container");
 const allAlbums = document.createElement('div');
 allAlbums.setAttribute('id', 'allAlbums');
 
@@ -89,18 +89,18 @@ playBtn.addEventListener("click", () => {
   playPauseFctn(); 
 });
 
-const playPauseFctn = () => {
+async function playPauseFctn () {
   // console.log("🚀 ~ file: renderer.ts:97 ~ playPauseFctn ~ isAudioPlaying:", isAudioPlaying)
   if (audioPlayer.classList.contains("play")) {
     audioPlayer.classList.remove("play"),
     audioPlayer.classList.add("pause"),
-    playBtn.innerHTML = `<i>${pauseIcon}</i>`,
-    audioPlayer.play()
+    playBtn.src = pauseIcon,
+    await audioPlayer.play()
   } else {
     audioPlayer.classList.remove("pause"),
     audioPlayer.classList.add("play"),
-    playBtn.innerHTML = `<i>${playIcon}</i>`,
-    audioPlayer.pause()
+    playBtn.src = playIcon,
+    await audioPlayer.pause()
   }
 }
 
@@ -125,31 +125,30 @@ const playThisSong = () => {
 };
 
 // Next song
-function nextSong() {
-  // let position = song['position']
+async function nextSong() {
   let position = (currentSong.position += 1);
 
   if (position > totalTracks - 1) {
-    audioPlayer.pause();
+    await audioPlayer.pause();
   } else {
     allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentSong.album_id);
     currentSong = (allSongsFromCurrentAlbum.filter(
       (song) => (song["position"] === position)))[0];
-    playThisSong();
+    await playThisSong();
   }
 };
 
 // Prev song
-function prevSong() {
+async function prevSong() {
   let position = (currentSong.position)
   if (position > 2) position -= 1;  
   if (position > totalTracks - 1) {
-    audioPlayer.pause();
+    await audioPlayer.pause();
   } else {
     const songs = versions.findAllSongsByAlbumID(currentSong.album_id);
     currentSong = (allSongsFromCurrentAlbum.filter(
     (song) => (song["position"] === position)))[0];
-    playThisSong();
+    await playThisSong();
   }
 };
 
