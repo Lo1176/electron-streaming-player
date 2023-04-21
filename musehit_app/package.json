@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "scripts": {
     "dev": "electron-esbuild dev",
-    "start": "nodemon --watch src/renderer/index.html --watch src/renderer/renderer.ts --exec yarn dev",
+    "start": "nodemon --watch src/renderer/index.html --watch src/renderer/renderer.ts --watch src/renderer/css/ --exec yarn dev",
     "build": "electron-esbuild build",
     "package": "electron-builder"
   },
