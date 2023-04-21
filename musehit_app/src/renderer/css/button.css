@@ -11,3 +11,7 @@
 .btn-ghost:hover {
   opacity: 1;
 }
+
+.player-btn:hover {
+  /* background-color: aqua; */
+}
