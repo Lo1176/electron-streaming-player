@@ -1,4 +1,25 @@
-/* @import 'reset.css'; */
+@import 'reset.css';
+@import 'colors.css';
 @import 'button.css';
 @import 'containers.css';
 @import 'player.css';
+
+
+/* css */
+/** font size **/
+h1 {
+    font-size: 40px
+}
+a {
+  color: inherit; 
+  text-decoration: inherit;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.disabled {
+  cursor: none !important;
+  filter: opacity(0.3);
+}
