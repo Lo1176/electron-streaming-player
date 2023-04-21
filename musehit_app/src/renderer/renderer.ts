@@ -18,13 +18,12 @@ const PLAYER = console.log(
 );
 /**************** END ******************/
 const isAudioPlaying = 
-  (
-    // audioPlayer.currentTime > 0 &&
-    !audioPlayer.paused &&
-    !audioPlayer.ended 
-    // audioPlayer.readyState > 2
-  );
-// console.log("🚀 ~ file: renderer.ts:72 ~ isAudioPlaying? ", isAudioPlaying);
+!!(
+  audioPlayer.currentTime > 0 &&
+  !audioPlayer.paused &&
+  !audioPlayer.ended 
+  // &&   audioPlayer.readyState > audioPlayer.HAVE_CURRENT_DATA
+);
 
 
 
@@ -40,7 +39,10 @@ const albumContainer = document.getElementById('albumContainer');
 const allAlbums = document.createElement('div');
 allAlbums.setAttribute('id', 'allAlbums');
 
+var allSongsFromCurrentAlbum = undefined
 var totalTracks = undefined
+var currentSong = undefined
+var currentAlbum = undefined
 
 for ( let i = 0; i < albums.length; i++) {
     const li = document.createElement('li');
@@ -48,7 +50,10 @@ for ( let i = 0; i < albums.length; i++) {
     li.innerHTML = `<a id="album" title="Click to open this album"
     href="#album">${albums[i].name}</a>`;
     li.setAttribute ('style', 'display: block;');
-    li.addEventListener("click", () => { displayAlbumSongsNames(albums[i]);});
+    li.addEventListener("click", () => { 
+      currentAlbum = albums[i].name,
+      displayAlbumSongsNames(albums[i]);
+    });
 
     allAlbums.appendChild(li);
 }
@@ -57,30 +62,22 @@ albumContainer.appendChild(allAlbums);
 
 /** function to display songs of an album */
 const displayAlbumSongsNames = ({id: album_id}) => {
-  const songs = versions.findAllSongsByAlbumID(album_id);
-  totalTracks = songs.length;
+  allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(album_id);
+  totalTracks = allSongsFromCurrentAlbum.length;
 
   containerSongsList.innerHTML = "";
   const divAllSongs = document.createElement("div");
   divAllSongs.setAttribute("id", "theSongList");
 
 
-  // list all songs from a specific album
-  for (let i = 0; i < songs.length; i++) {
+  // list all allSongsFromCurrentAlbum from a specific album
+  for (let i = 0; i < allSongsFromCurrentAlbum.length; i++) {
     const divSong = document.createElement("div");
-    divSong.innerText += `${songs[i].name} `;
+    divSong.innerText = allSongsFromCurrentAlbum[i].name;
     divSong.addEventListener('click', () => {
-      console.log("song ", songs[i]), 
-      playThisSong(songs.position = songs[i])
-      // console.log("CACHES ",caches.open)  
+      currentSong = allSongsFromCurrentAlbum[i];
+      playThisSong();
     });
-    // divSong.addEventListener("click", () => { playThisSong(versions.findSong(album_id, (songs.position = i)));
-    
-    
-    
-    // }      
-      
-    // );
     divAllSongs.appendChild(divSong);
   }
 
@@ -89,17 +86,11 @@ const displayAlbumSongsNames = ({id: album_id}) => {
 };
 
 playBtn.addEventListener("click", () => {
-  // if no song loaded => nothing appends
-  // else
-  // audioPlayer.onplaying = () => playPauseFctn();
-  playPauseFctn();
-  
+  playPauseFctn(); 
 });
 
-
-// audioPlayer.onpause = () => {audioPlayer.onpause ? console.log('pause = true') : console.log("pause = false")}
-
 const playPauseFctn = () => {
+  // console.log("🚀 ~ file: renderer.ts:97 ~ playPauseFctn ~ isAudioPlaying:", isAudioPlaying)
   if (audioPlayer.classList.contains("play")) {
     audioPlayer.classList.remove("play"),
     audioPlayer.classList.add("pause"),
@@ -116,55 +107,49 @@ const playPauseFctn = () => {
 
 
 /** function to pay a song */
-const playThisSong = (song: any) => {
-  audioPlayer.src = `./../public/uploads/${song.path}`;
+const playThisSong = () => {
+  PLAYER
+  audioPlayer.src = `./../public/uploads/${currentSong.path}`;
   audioPlayer.classList.add("play");
   playPauseFctn();
 
-  // if ended go to next song
-  // audioPlayer.addEventListener("ended", () => {
-  //   nextSong(song);
-  // });
-  // PLAYER
   nextBtn.addEventListener("click", () => {
-    // if (is audio is not playing do nothing)
-    // else
-    nextSong(song);
+    nextSong();
   });
   prevBtn.addEventListener("click", () => {
-    // if (is audio is not playing do nothing)
-    // else
-    prevSong(song);
+    prevSong();
   });
 
+  console.log("song ", currentSong.name),
+  console.log("curentAlbum: ", currentAlbum)
 };
 
 // Next song
-function nextSong(song) {
-  console.log("🚀 ~ file: renderer.ts:32 ~ position_BEFORE: ", song.position)
-  song['position'] += 1;
-  console.log("🚀 ~ file: renderer.ts:71 ~ position_AFTER: ", song.position);
+function nextSong() {
+  // let position = song['position']
+  let position = (currentSong.position += 1);
 
-  console.log("🚀 ~ file: renderer.ts:78 ~ nextSong ~ totalTracks:", totalTracks)
-  
-  if (song.position > totalTracks - 1) {
+  if (position > totalTracks - 1) {
     audioPlayer.pause();
   } else {
-    const songs = versions.findAllSongsByAlbumID(song.album_id);
-    const megaToto = songs.filter((toto) => toto["position"] === song["position"])
-    playThisSong(megaToto[0])
+    allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentSong.album_id);
+    currentSong = (allSongsFromCurrentAlbum.filter(
+      (song) => (song["position"] === position)))[0];
+    playThisSong();
   }
 };
 
 // Prev song
-function prevSong(song) {
-  if (song["position"] > 2) song["position"] -= 1;  
-  if (song.position > totalTracks - 1) {
+function prevSong() {
+  let position = (currentSong.position)
+  if (position > 2) position -= 1;  
+  if (position > totalTracks - 1) {
     audioPlayer.pause();
   } else {
-    const songs = versions.findAllSongsByAlbumID(song.album_id);
-    const megaToto = songs.filter((toto) => toto["position"] === song["position"])
-    playThisSong(megaToto[0])
+    const songs = versions.findAllSongsByAlbumID(currentSong.album_id);
+    currentSong = (allSongsFromCurrentAlbum.filter(
+    (song) => (song["position"] === position)))[0];
+    playThisSong();
   }
 };
 
