@@ -11,7 +11,9 @@
     <aside>
       <div class="page-sidebar">
         <h1 class="page-sidebar__title">MuseHit</h1>
-        <div id='page-sidebar__album-container' class="container"></div>
+        <div id="albums-container" class="albums-container">
+        </div>
+        
 
       </div>
       <!-- <a class="btn btn-ghost" href="./index.html">Homepage</a> -->
@@ -32,40 +34,30 @@
         src="./../src/images/previous.svg"
         alt="previous button">
 
-
-
         <img 
         id="play"
         class="play-img player-btn pointer"
         src="./../src/images/play-btn.svg"
         alt="play button">
 
-
         <img 
         id="next"
         class="next-img prev-next-btn player-btn pointer"
         src="./../src/images/next.svg"
         alt="next button">
-
+        <div id="info">
+          <span id="duration"></span>a beautiful bar<span id="timeleft"></span>
+        </div>
 
       </div>
-      <!-- <audio id="audioPlayer">PLAY IT LITTLE CRAP >
-      Your browser does not support the audio element, it's so sad.
-      </audio> -->
+      <audio id="audioPlayer">
+        
+      </audio>
       <figure>
           <div id="songs-list" class="container">
         </figure>
       </div>
     </aside>
-    <!-- ************** -->
-    <div class="audio-player">
-      <div class="icon-container">
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="audio-icon" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
-    </svg> -->
-           <audio id="audioPlayer"></audio>
-      </div>
-    </div>
 
   <script type="text/javascript" src="../dist/renderer.js"></script>
 
