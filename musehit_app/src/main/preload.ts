@@ -3,16 +3,12 @@ const db = require('better-sqlite3')('./resources/jukebox.db');
 
 contextBridge.exposeInMainWorld("versions", {
   findAllSongs: () => {
-    const allSongsFromCatalog = db
-      .prepare("select * from songs")
-      .all();
+    const allSongsFromCatalog = db.prepare("select * from songs").all();
     return allSongsFromCatalog;
   },
 
   findAlbumsByArtist: () => {
-    const rows = db
-      .prepare("SELECT * FROM  albums ORDER BY artist_id;")
-      .all();
+    const rows = db.prepare("SELECT * FROM  albums ORDER BY artist_id;").all();
     return rows;
   },
 
@@ -25,9 +21,19 @@ contextBridge.exposeInMainWorld("versions", {
 
   findSong: (album_id: any, song_position: 1) => {
     const song = db
-      .prepare(`SELECT * FROM  "songs" WHERE album_id = ${album_id} AND position = ${song_position}; `)
+      .prepare(
+        `SELECT * FROM  "songs" WHERE album_id = ${album_id} AND position = ${song_position}; `
+      )
       .all();
     return song[0];
   },
 
+  findArtist: (artist_id: any) => {
+    const artistInfo = db
+      .prepare(
+      `SELECT * FROM "artists" WHERE id = ${artist_id}`
+      )
+      .all();
+    return artistInfo[0];
+  },
 });
