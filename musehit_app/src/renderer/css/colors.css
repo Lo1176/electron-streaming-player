@@ -1,20 +1,14 @@
 :root {
   --main-bg-color: #FAFBFE;
+  /* --main-bg-color: black; */
   --white: #fff;
   /* --orange: #FF7E3A; */
-  /* CSS HEX */
-  --dark-blue: #0a4f7aff;
-  --blue: #0b69b1ff;
-  --light-blue: #69c5f6ff;
-  --yellow: #fdb226ff;
-  --orange: #fc610dff;
-
-  /* CSS HSL */
-  /* --indigo-dye: hsla(203, 85%, 26%, 1);
-  --green-blue: hsla(206, 88%, 37%, 1);
-  --maya-blue: hsla(201, 89%, 69%, 1);
-  --xanthous: hsla(39, 98%, 57%, 1);
-  --orange-pantone: hsla(21, 98%, 52%, 1); */
+  /* CSS rgb */
+  --dark-blue: rgb(10, 79, 122);
+  --blue: rgb(11, 105, 177);
+  --light-blue: rgb(105, 197, 246);
+  --yellow: rgb(253, 178, 38);
+  --orange: rgb(252, 97, 13);
 }
 
 /** https://coolors.co/0a4f7a-0b69b1-69c5f6-fdb226-fc610d */
