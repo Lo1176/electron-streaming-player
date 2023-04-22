@@ -3,7 +3,7 @@ const albums = versions.findAlbumsByArtist();
 // console.log("🚀 ~ file: renderer.ts:3 ~ albums:", albums)
 
 const containerSongsList = document.getElementById("songs-list");
-const audioPlayer = document.getElementById("audioPlayer");
+const audioPlayer = <HTMLVideoElement> document.getElementById("audioPlayer");
 /************ PLAYER INFOS ***************/
 const PLAYER = console.log(
   "🚀 ~ PLAYER_INFO ~ ",
@@ -35,30 +35,40 @@ const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 
 /** display albums name on Homepage */
-const albumContainer = document.getElementById("page-sidebar__album-container");
-const allAlbums = document.createElement('div');
-allAlbums.setAttribute('id', 'allAlbums');
+const albumContainer = document.getElementById("albums-container");
+// const allAlbums = document.createElement('ul');
+// allAlbums.setAttribute('id', 'allAlbums');
 
 var allSongsFromCurrentAlbum = undefined
 var totalTracks = undefined
 var currentSong = undefined
 var currentAlbum = undefined
+var artistInfo = undefined
+var defaultCover = "default-cover.png"
 
-for ( let i = 0; i < albums.length; i++) {
-    const li = document.createElement('li');
-
-    li.innerHTML = `<a id="album" title="Click to open this album"
-    href="#album">${albums[i].name}</a>`;
-    li.setAttribute ('style', 'display: block;');
-    li.addEventListener("click", () => { 
+const showAllAlbums = () => {
+  for ( let i = 0; i < albums.length; i++) {
+    artistInfo = versions.findArtist(albums[i].artist_id);
+    const div = document.createElement('div');
+    const cover = (albums[i].cover !== 'NULL') ? albums[i].cover : defaultCover;
+    div.innerHTML = `
+     <a id="album" 
+      title="Click to open this album" 
+      href="#album"><div class="album-card">
+        <img class="album-cover" src="./../public/uploads/${cover}" alt="album cover">
+        <div class="album-content">
+          <h4 class="album-name">${albums[i].name}</h4>
+          <p class="album-artiste-name">${artistInfo.name}</p>
+        </div>
+    </a>`;
+    div.addEventListener("click", () => { 
       currentAlbum = albums[i].name,
       displayAlbumSongsNames(albums[i]);
     });
-
-    allAlbums.appendChild(li);
+    albumContainer.appendChild(div);
+  }
 }
-
-albumContainer.appendChild(allAlbums);
+showAllAlbums();
 
 /** function to display songs of an album */
 const displayAlbumSongsNames = ({id: album_id}) => {
@@ -105,8 +115,8 @@ async function playPauseFctn () {
 }
 
 
-
-/** function to pay a song */
+/** functions for players */
+// function to pay a song
 const playThisSong = () => {
   PLAYER
   audioPlayer.src = `./../public/uploads/${currentSong.path}`;
@@ -124,6 +134,37 @@ const playThisSong = () => {
   console.log("curentAlbum: ", currentAlbum)
 };
 
+// Countdown
+audioPlayer.addEventListener("timeupdate", function() {
+    var timeleft = document.getElementById('timeleft'),
+        duration = parseInt( audioPlayer.duration ),
+        currentTime = parseInt( audioPlayer.currentTime ),
+        timeLeft = duration - currentTime,
+        s, m;
+        
+        
+        s = timeLeft % 60;
+        m = Math.floor( timeLeft / 60 ) % 60;
+        
+        s = s < 10 ? "0"+s : s;
+        m = m < 10 ? "0"+m : m;
+        
+        timeleft.innerHTML = m+":"+s;    
+}, false);
+
+// Countup
+audioPlayer.addEventListener("timeupdate", function() {
+    var timeline = document.getElementById('duration');
+    var s = parseInt(audioPlayer.currentTime % 60);
+    var m = parseInt((audioPlayer.currentTime / 60) % 60);
+    if (s < 10) {
+        timeline.innerHTML = m + ':0' + s;
+    }
+    else {
+        timeline.innerHTML = m + ':' + s;
+    }
+}, false);
+
 // Next song
 async function nextSong() {
   let position = (currentSong.position += 1);
@@ -134,7 +175,7 @@ async function nextSong() {
     allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentSong.album_id);
     currentSong = (allSongsFromCurrentAlbum.filter(
       (song) => (song["position"] === position)))[0];
-    await playThisSong();
+    playThisSong();
   }
 };
 
@@ -148,7 +189,7 @@ async function prevSong() {
     const songs = versions.findAllSongsByAlbumID(currentSong.album_id);
     currentSong = (allSongsFromCurrentAlbum.filter(
     (song) => (song["position"] === position)))[0];
-    await playThisSong();
+    playThisSong();
   }
 };
 
