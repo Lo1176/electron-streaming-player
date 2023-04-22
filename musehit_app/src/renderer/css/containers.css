@@ -10,7 +10,53 @@ body {
    font-weight: bolder;
    margin-bottom: 24px;
 }
+/** main-container **/
+.main-container {
+    padding-bottom: 56px; /* because of the footer-player height */
 
+}
+/** album-container **/
+.albums-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin: 24px;
+}
+.album-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    /* margin: 4px; */
+    gap: 16px;
+    border: rgba(var(--dark-blue), .5) 1px solid;
+    border-radius: var(--br-sm);
+
+    width: 164px;
+    height: 246px;
+}
+.album-cover {
+    width: 164px;
+    border-radius: var(--br-sm);
+}
+
+.album-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 8px;
+
+    width: 164px;
+    height: 66px;
+}
+.album-content.album-title {
+    color: black;
+    font-weight: bold;
+
+    
+}
 /* .container {
     margin-top: 24px;
 }
@@ -18,3 +64,9 @@ body {
 .theSongList {
     margin-top: 4px;
 } */
+
+#info {
+    width: 195px;
+    /* color: red;
+    font-size: 40px; */
+}
