@@ -54,7 +54,7 @@ const showAllAlbums = () => {
     div.innerHTML = `
      <a id="album" 
       title="Click to open this album" 
-      href="#album"><div class="album-card">
+      href="#songs-list"><div class="album-card">
         <img class="album-cover" src="./../public/uploads/${cover}" alt="album cover">
         <div class="album-content">
           <h4 class="album-name">${albums[i].name}</h4>
