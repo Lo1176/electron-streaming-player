@@ -18,35 +18,28 @@
       </div>
       <!-- <a class="btn btn-ghost" href="./index.html">Homepage</a> -->
       <div class="footer-player player">
-        
-        <!-- <object 
-          type="image/svg+xml"
-          data="./../src/images/previous.svg"
+        <div class="player-buttons">
+          <img 
           id="prev"
-          class="prev-img player-btn" 
-        >
-        </object> -->
+          class="prev-img prev-next-btn player-btn pointer disabled"
+          src="./../src/images/previous.svg"
+          alt="previous button">
+          
+          <img 
+          id="play"
+          class="play-img player-btn pointer"
+          src="./../src/images/play-btn.svg"
+          alt="play button">
+          
+          <img 
+          id="next"
+          class="next-img prev-next-btn player-btn pointer"
+          src="./../src/images/next.svg"
+          alt="next button">
+        </div>
 
-
-        <img 
-        id="prev"
-        class="prev-img prev-next-btn player-btn pointer disabled"
-        src="./../src/images/previous.svg"
-        alt="previous button">
-
-        <img 
-        id="play"
-        class="play-img player-btn pointer"
-        src="./../src/images/play-btn.svg"
-        alt="play button">
-
-        <img 
-        id="next"
-        class="next-img prev-next-btn player-btn pointer"
-        src="./../src/images/next.svg"
-        alt="next button">
-        <div id="info">
-          <span id="duration"></span>a beautiful bar<span id="timeleft"></span>
+          <div id="info">
+          <span id="duration"></span>----------------a beautiful progression bar--------------<span id="timeleft"></span>
         </div>
 
       </div>
