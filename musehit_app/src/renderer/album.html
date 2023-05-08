@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+  <link rel="stylesheet" href="css/index.css">
+  <title>MuseHit</title>
+  <!-- <link rel="import" href="album.html" /> -->
+</head>
+<body>
+  <div id="main-container">
+    <aside>
+      <a class="btn btn-ghost" href="./index.html">Homepage</a>
+      <h1 onclick="displayAlbumSongsNames()">album page list</h1>
+      <figure>
+        <div id="songs-list" class="container" onload="displaySongs()">
+      </figure>
+      <div class="footer-player player">
+        <div class="player-buttons">
+          <img 
+          id="prev"
+          class="prev-img prev-next-btn player-btn pointer disabled"
+          src="./../src/images/previous.svg"
+          alt="previous button">
+
+          <img 
+          id="play"
+          class="play-img player-btn pointer"
+          src="./../src/images/play-btn.svg"
+          alt="play button">
+
+          <img 
+          id="next"
+          class="next-img prev-next-btn player-btn pointer"
+          src="./../src/images/next.svg"
+          alt="next button">
+        </div>
+
+          <div id="info">
+          <span id="duration"></span>----------------a beautiful progression bar--------------<span id="timeleft"></span>
+        </div>
+
+      </div>
+      <audio id="audioPlayer"></audio>
+    </aside>
+  </div>
+
+  <script type="text/javascript" src="../dist/renderer.js"></script>
+
+</body>
+</html>
