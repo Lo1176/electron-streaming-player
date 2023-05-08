@@ -12,7 +12,7 @@ bonus
     Keep the music playing when changing pages
     Have a visual indication of where we are in the song
     Be able to jump directly to a moment of the song
-    Have an image that represents the album
+✔     Have an image that represents the album
 ✔     Have pause, previous, next buttons
     Have buttons to raise the sound, to accelerate the music
     Have a beautiful design
