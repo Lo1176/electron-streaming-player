@@ -41,6 +41,7 @@ const albumContainer = document.getElementById("albums-container");
 const albumName = document.getElementById('album-name');
 const artistName = document.getElementById('artist-name');
 const songName = document.getElementById('song-name');
+const infoContentSeparator = document.getElementById("player-info-content-separator"); 
 // const allAlbums = document.createElement('ul');
 // allAlbums.setAttribute('id', 'allAlbums');
 
@@ -96,7 +97,12 @@ function displayAlbumSongsNames() {
   // list all allSongsFromCurrentAlbum
   for (let i = 0; i < allSongsFromCurrentAlbum.length; i++) {
     const divSong = document.createElement("div");
-    divSong.innerText = allSongsFromCurrentAlbum[i].name;
+    divSong.setAttribute('class', 'song-info')
+    divSong.innerHTML = `
+      <div class="content-overlay"></div>
+      <img class="album-cover album-cover-thumb" src="./../public/uploads/${currentAlbum.cover}" alt="album cover">
+      <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
+    `;
     divSong.addEventListener('click', () => {
       currentSong = allSongsFromCurrentAlbum[i];
       playThisSong();
@@ -143,8 +149,10 @@ const playThisSong = () => {
   
   // display album informations
   // albumName.innerHTML = // not displayed
-  songName.innerHTML = currentSong.name
-  artistName.innerHTML = currentArtist.name
+
+  songName.innerText = currentSong.name;
+  infoContentSeparator.innerText = "•";
+  artistName.innerText = currentArtist.name;
   console.log("song ", currentSong.name),
     console.log(
       "🚀 ~ file: renderer.ts:149 ~ info-content currentAlbum:",

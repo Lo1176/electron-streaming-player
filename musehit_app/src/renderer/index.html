@@ -11,16 +11,19 @@
 <body>
   <div id="main-container">
     <aside>
-      <div class="page-navbar">
-        <h1 class="page-navbar__title">MuseHit</h1>
-        <!-- how to load an other page ? -->
-        <!-- <a href="album.html" target="my-iframe">Click me</a>
-        <iframe name="my-iframe" src="album.html"></iframe> -->
-          <!-- <button id="my-button">Click me</button>
-          <div id="my-div">First content</div> -->
-        <div id="albums-container" class="albums-container"></div>
-        <div id="songs-list" class="container" onload="displaySongs()">
+      <div class="home-page">
+        <div class="home-page-navbar">
+          <h1 class="home-page-navbar__title">MuseHit</h1>
+          <!-- how to load an other page ? -->
+          <!-- <a href="album.html" target="my-iframe">Click me</a>
+          <iframe name="my-iframe" src="album.html"></iframe> -->
+            <!-- <button id="my-button">Click me</button>
+            <div id="my-div">First content</div> -->
+          <div id="albums-container" class="albums-container">All Albums</div>
+        </div>
       </div>
+
+          <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
       <div class="footer-player player">
         <div class="player-buttons">
           <img 
@@ -45,11 +48,13 @@
         <div id="info">
           <div class="player-info-content">
             <span id="song-name"></span>
-            <span> • </span>
+            <span id="player-info-content-separator"></span>
             <span id="artist-name"></span>
             <!-- <span id="album-name"></span> -->
           </div>
-          <span id="duration"></span>----------------a beautiful progression bar--------------<span id="timeleft"></span>
+          <div class="player-info-duration">
+            <span id="duration">0:00</span><span id="'progression-bar">----------------a beautiful progression bar--------------</span><span id="timeleft">0:00</span>
+          </div>
         </div>
 
       </div>
