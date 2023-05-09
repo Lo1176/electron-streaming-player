@@ -30,4 +30,6 @@
 
 .player-info-content {
     display: flex;
+    gap: 12px;
+    margin-bottom: 5px;
 }
