@@ -3,20 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
+  <!-- <link rel="import" href="album.html" /> -->
 </head>
 <body>
   <div id="main-container">
     <aside>
-      <div class="page-sidebar">
-        <h1 class="page-sidebar__title">MuseHit</h1>
-        <div id="albums-container" class="albums-container">
-        </div>
-        
-
+      <div class="page-navbar">
+        <h1 class="page-navbar__title">MuseHit</h1>
+        <!-- how to load an other page ? -->
+        <!-- <a href="album.html" target="my-iframe">Click me</a>
+        <iframe name="my-iframe" src="album.html"></iframe> -->
+          <!-- <button id="my-button">Click me</button>
+          <div id="my-div">First content</div> -->
+        <div id="albums-container" class="albums-container"></div>
+        <div id="songs-list" class="container" onload="displaySongs()">
       </div>
-      <!-- <a class="btn btn-ghost" href="./index.html">Homepage</a> -->
       <div class="footer-player player">
         <div class="player-buttons">
           <img 
@@ -24,13 +28,13 @@
           class="prev-img prev-next-btn player-btn pointer disabled"
           src="./../src/images/previous.svg"
           alt="previous button">
-          
+
           <img 
           id="play"
           class="play-img player-btn pointer"
           src="./../src/images/play-btn.svg"
           alt="play button">
-          
+
           <img 
           id="next"
           class="next-img prev-next-btn player-btn pointer"
@@ -38,21 +42,31 @@
           alt="next button">
         </div>
 
-          <div id="info">
+        <div id="info">
+          <div class="player-info-content">
+            <span id="song-name"></span>
+            <span> • </span>
+            <span id="artist-name"></span>
+            <!-- <span id="album-name"></span> -->
+          </div>
           <span id="duration"></span>----------------a beautiful progression bar--------------<span id="timeleft"></span>
         </div>
 
       </div>
-      <audio id="audioPlayer">
-        
-      </audio>
-      <figure>
-          <div id="songs-list" class="container">
-        </figure>
-      </div>
+      <audio id="audioPlayer"></audio>
     </aside>
+    </div>
 
-  <script type="text/javascript" src="../dist/renderer.js"></script>
+  <script type="text/javascript" src="../dist/renderer.js">
+    // var fs = require('fs');
+
+    // document.getElementById('my-button').addEventListener('click', function() {
+    //     fs.readFile('album.html', function (err, data) {
+    //         document.getElementById('my-div').innerHTML = data.toString()
+    //     })
+    //     alert('album')
+    // })
+  </script>
 
 </body>
 </html>
