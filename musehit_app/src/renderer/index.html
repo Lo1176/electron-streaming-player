@@ -19,11 +19,14 @@
           <iframe name="my-iframe" src="album.html"></iframe> -->
             <!-- <button id="my-button">Click me</button>
             <div id="my-div">First content</div> -->
-          <div id="albums-container" class="albums-container">All Albums</div>
+            <div id="albums-container" class="albums-container">All Albums</div>
+          </div>
+          <div class="line-separator"></div>
         </div>
-      </div>
-
-          <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
+        
+        <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
+        <!-- <div class="line-separator"></div> -->
+      <div id="bottom-height"></div>
       <div class="footer-player player">
         <div class="player-buttons">
           <img 
@@ -37,33 +40,37 @@
           class="play-img player-btn pointer"
           src="./../src/images/play-btn.svg"
           alt="play button">
-
+          
           <img 
           id="next"
           class="next-img prev-next-btn player-btn pointer"
           src="./../src/images/next.svg"
           alt="next button">
         </div>
-
+        
         <div id="info">
-          <div class="player-info-content">
+          <div class="player-info player-info-content">
             <span id="song-name"></span>
             <span id="player-info-content-separator"></span>
             <span id="artist-name"></span>
             <!-- <span id="album-name"></span> -->
           </div>
-          <div class="player-info-duration">
-            <span id="duration">0:00</span><span id="'progression-bar">----------------a beautiful progression bar--------------</span><span id="timeleft">0:00</span>
+          <div class="player-info player-info-duration">
+            <span id="duration">0:00</span>
+            <div class="progress-container">
+              <span id="'progress-bar" onload="displayProgressionBar()"></span>
+            </div>
+            <span id="timeleft">0:00</span>
           </div>
         </div>
-
+        
       </div>
       <audio id="audioPlayer"></audio>
     </aside>
     </div>
-
-  <script type="text/javascript" src="../dist/renderer.js">
-    // var fs = require('fs');
+    
+    <script type="text/javascript" src="../dist/renderer.js">
+      // var fs = require('fs');
 
     // document.getElementById('my-button').addEventListener('click', function() {
     //     fs.readFile('album.html', function (err, data) {

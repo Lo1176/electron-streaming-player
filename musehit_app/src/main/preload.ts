@@ -2,6 +2,7 @@ const { contextBridge } = require('electron')
 const db = require('better-sqlite3')('./resources/jukebox.db');
 
 contextBridge.exposeInMainWorld("versions", {
+  
   findAllSongs: () => {
     const allSongsFromCatalog = db.prepare("select * from songs").all();
     return allSongsFromCatalog;

@@ -19,15 +19,13 @@ if (!!audioPlayer) {
   );
 }
 /**************** END ******************/
-const isAudioPlaying = 
-!!(
+
+const isAudioPlaying = !!(
   audioPlayer.currentTime > 0 &&
   !audioPlayer.paused &&
   !audioPlayer.ended 
   // &&   audioPlayer.readyState > audioPlayer.HAVE_CURRENT_DATA
 );
-
-
 
 const playBtn = document.getElementById("play");
 const playIcon = "./../src/images/play-btn.svg";
@@ -35,6 +33,7 @@ const pauseIcon = "./../src/images/pause-btn.svg";
 // playBtn.innerHTML = `<i>${playIcon}</i>`;
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
+const progressBar = document.getElementById("progress-bar");
 
 /** display albums name on Homepage */
 const albumContainer = document.getElementById("albums-container");
@@ -132,8 +131,8 @@ async function playPauseFctn () {
   }
 }
 
-/** functions for players */
-// function to pay a song
+/*********** functions for player **************/
+// play a song
 const playThisSong = () => {
   PLAYER
   audioPlayer.src = `./../public/uploads/${currentSong.path}`;
@@ -148,35 +147,34 @@ const playThisSong = () => {
   });
   
   // display album informations
-  // albumName.innerHTML = // not displayed
-
   songName.innerText = currentSong.name;
   infoContentSeparator.innerText = "•";
   artistName.innerText = currentArtist.name;
-  console.log("song ", currentSong.name),
-    console.log(
-      "🚀 ~ file: renderer.ts:149 ~ info-content currentAlbum:",
-      currentAlbum,
-      "currentSong:",
-      currentSong,
-      "currentArtist.name:",
-      currentArtist.name
-    );
+  // console.log("song ", currentSong.name),
+  //   console.log(
+  //     "🚀 ~ file: renderer.ts:149 ~ info-content currentAlbum:",
+  //     currentAlbum,
+  //     "currentSong:",
+  //     currentSong,
+  //     "currentArtist.name:",
+  //     currentArtist.name
+  //   );
 };
-
 
 // Countdown
 audioPlayer.addEventListener("timeupdate", function() {
     var timeLeftElement = document.getElementById('timeleft'),
-        songDuration = parseInt(audioPlayer.duration),
-        currentTime = parseInt(audioPlayer.currentTime),
-        timeLeft = songDuration - currentTime, s, m;
+        songDuration = audioPlayer.duration,
+        currentTime = audioPlayer.currentTime,
+        timeLeft = songDuration - currentTime,
+        s: string | number,
+        m: string | number;
         
-        s = timeLeft % 60;
+        s = Math.floor(timeLeft) % 60;
         m = Math.floor( timeLeft / 60 ) % 60;
         
-        s = s < 10 ? "0"+s : s;
-        m = m < 10 ? "0"+m : m;
+        s = s < 10 ? "0" + s : s;
+        m = m < 10 ? "0" + m : m;
         
         timeLeftElement.innerHTML = m + ":" + s;    
 }, false);
@@ -184,8 +182,8 @@ audioPlayer.addEventListener("timeupdate", function() {
 // Countup
 audioPlayer.addEventListener("timeupdate", function() {
     var timeLineElement = document.getElementById('duration');
-    var s = parseInt(audioPlayer.currentTime % 60);
-    var m = parseInt((audioPlayer.currentTime / 60) % 60);
+    var s = Math.floor(audioPlayer.currentTime % 60);
+    var m = Math.floor((audioPlayer.currentTime / 60) % 60);
     if (s < 10) {
         timeLineElement.innerHTML = m + ':0' + s;
     }
@@ -222,3 +220,13 @@ function prevSong() {
   }
 };
 
+// progress bar
+// 1- convertir currentTime en % par rapport à songDuration
+function displayProgressionBar({ currentTime, songDuration }) {
+  // const {currentTime, songDuration} = e.target;
+  const progressPercent = (currentTime * 100) / songDuration;
+  progressBar.style.width = `${progressPercent}%`;
+}
+
+// if we click on the progress bar we can it must change the currentTime
+function update() {}
