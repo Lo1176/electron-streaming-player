@@ -1,7 +1,7 @@
 body {
     /* background-color: #123456; */
     background-color: var(--main-bg-color);
-    margin: 12px;
+    /* margin: 12px; */
 }
 
 .home-page-navbar {
@@ -22,9 +22,10 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 24px;
-    margin: 24px;
+    margin: 24px;   
+}
+.line-separator {
     border-bottom: 1px solid black;  /* to see where am i  */
-   
 }
 
 .album-content {

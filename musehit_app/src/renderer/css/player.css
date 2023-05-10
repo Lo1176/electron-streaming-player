@@ -21,15 +21,28 @@
 }
 
 #info {
-    /* display: flex; */
+    /* display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; */
     width: 100%;
     margin: 0 12px;
 }
 
-.player-info-content {
+.player-info {
     display: flex;
     gap: 12px;
     margin-bottom: 5px;
+    align-items: center;
+}
+
+#bottom-height {
+    /* height must be as minimum footer-player height */
+    height: 92px;
+}
+
+/* progress bar */
+.progress-container {
+    height: 3px;
+    background-color: grey;
+    width: 100%;
 }
