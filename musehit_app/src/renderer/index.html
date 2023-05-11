@@ -27,11 +27,11 @@
         <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
         <!-- <div class="line-separator"></div> -->
       <div id="bottom-height"></div>
-      <div class="footer-player player">
+      <div id="footer-player" class="player">
         <div class="player-buttons">
           <img 
           id="prev"
-          class="prev-img prev-next-btn player-btn pointer disabled"
+          class="prev-img prev-next-btn player-btn pointer"
           src="./../src/images/previous.svg"
           alt="previous button">
 
@@ -56,16 +56,16 @@
             <!-- <span id="album-name"></span> -->
           </div>
           <div class="player-info player-info-duration">
-            <span id="duration">0:00</span>
-            <div class="progress-container">
-              <span id="'progress-bar" onload="displayProgressionBar()"></span>
+            <span id="duration" class="time">0:00</span>
+            <div id="progress-container">
+              <span id="progress-bar"></span>
             </div>
-            <span id="timeleft">0:00</span>
+            <span id="time-left" class="time">0:00</span>
           </div>
         </div>
         
+        <audio id="audioPlayer"></audio>
       </div>
-      <audio id="audioPlayer"></audio>
     </aside>
     </div>
     
