@@ -1,3 +1,19 @@
 :root {
-    --br-sm: 4px;
+  --main-bg-color: #FAFBFE;
+  /* --main-bg-color: black; */
+  --white: #fff;
+  /* CSS rgb */
+  --dark-blue: rgb(10, 79, 122);
+  --blue: rgb(11, 105, 177);
+  --light-blue: rgb(105, 197, 246);
+  --yellow: rgb(253, 178, 38);
+  --orange: rgb(252, 97, 13);
+  /** https://coolors.co/0a4f7a-0b69b1-69c5f6-fdb226-fc610d */
+
+   --s: 4px;
+   --ms: 8px;
+   --m: 12px;
+   --ml: 16px;
+   --l: 24px;
+   --footer-height: 56px;
 }
