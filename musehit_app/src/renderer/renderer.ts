@@ -27,12 +27,14 @@ const isAudioPlaying = !!(
   // &&   audioPlayer.readyState > audioPlayer.HAVE_CURRENT_DATA
 );
 
-const playBtn = document.getElementById("play");
+const footerPlayer = document.getElementById("footer-player");
+const playBtn = document.getElementById("play") as HTMLImageElement;
 const playIcon = "./../src/images/play-btn.svg";
 const pauseIcon = "./../src/images/pause-btn.svg";
 // playBtn.innerHTML = `<i>${playIcon}</i>`;
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
+const progressContainer = document.getElementById("progress-container");
 const progressBar = document.getElementById("progress-bar");
 
 /** display albums name on Homepage */
@@ -104,6 +106,7 @@ function displayAlbumSongsNames() {
     `;
     divSong.addEventListener('click', () => {
       currentSong = allSongsFromCurrentAlbum[i];
+      // maybe find a better name than playThisSong => it's confused with playSong
       playThisSong();
     });
     divAllSongs.appendChild(divSong);
@@ -114,56 +117,83 @@ function displayAlbumSongsNames() {
 };
 
 playBtn.addEventListener("click", () => {
-  playPauseFctn(); 
+  // is the song already playing ?
+  const isPlaying = footerPlayer.classList.contains("play");
+
+  isPlaying ? pauseSong() : playSong();
+  // playPauseFctn(); // old function
 });
 
-async function playPauseFctn () {
-  if (audioPlayer.classList.contains("play")) {
-    audioPlayer.classList.remove("play"),
-    audioPlayer.classList.add("pause"),
-    playBtn.src = pauseIcon,
-    await audioPlayer.play()
-  } else {
-    audioPlayer.classList.remove("pause"),
-    audioPlayer.classList.add("play"),
-    playBtn.src = playIcon,
-    await audioPlayer.pause()
-  }
+function playSong() {
+  footerPlayer.classList.remove("pause"),
+  footerPlayer.classList.add("play"),
+  playBtn.src = pauseIcon,
+  audioPlayer.play();
 }
+
+function pauseSong() {
+  footerPlayer.classList.remove("play"),
+  footerPlayer.classList.add("pause"),
+  playBtn.src = playIcon,
+  audioPlayer.pause();
+}
+// I have to split the playPauseFctn because a song finished it'll pause the next one
+// async function playPauseFctn () {
+//   if (audioPlayer.classList.contains("play")) {
+//     audioPlayer.classList.remove("play"),
+//     audioPlayer.classList.add("pause"),
+//     playBtn.src = playIcon,
+//     audioPlayer.pause();
+//     PLAYER;
+//   } else {
+//     audioPlayer.classList.remove("pause"),
+//     audioPlayer.classList.add("play"),
+//     playBtn.src = pauseIcon,
+//     await audioPlayer.play();
+//     PLAYER;
+//   }
+// }
+
+
 
 /*********** functions for player **************/
 // play a song
 const playThisSong = () => {
-  PLAYER
   audioPlayer.src = `./../public/uploads/${currentSong.path}`;
-  audioPlayer.classList.add("play");
-  playPauseFctn();
-  
-  nextBtn.addEventListener("click", () => {
-    nextSong();
-  });
-  prevBtn.addEventListener("click", () => {
-    prevSong();
-  });
-  
-  // display album informations
+  playSong();
+  if (currentSong.position === 1) {
+    prevBtn.classList.add('disabled')
+
+  }
+  if (currentSong.position > 1 && currentSong.position !== totalTracks) {
+    prevBtn.classList.remove("disabled");
+    nextBtn.classList.remove("disabled");
+  }
+  console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position:", currentSong.position)
+  console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ totalTracks:", totalTracks)
+  console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position !== totalTracks:", currentSong.position !== totalTracks)
+  if (currentSong.position === totalTracks) {
+    nextBtn.classList.add('disabled')
+
+  }
+
+  // display album information
   songName.innerText = currentSong.name;
   infoContentSeparator.innerText = "•";
   artistName.innerText = currentArtist.name;
-  // console.log("song ", currentSong.name),
-  //   console.log(
-  //     "🚀 ~ file: renderer.ts:149 ~ info-content currentAlbum:",
-  //     currentAlbum,
-  //     "currentSong:",
-  //     currentSong,
-  //     "currentArtist.name:",
-  //     currentArtist.name
-  //   );
+  // PLAYER
 };
+
+nextBtn.addEventListener("click", () => {
+  nextSong();
+});
+prevBtn.addEventListener("click", () => {
+  prevSong();
+});
 
 // Countdown
 audioPlayer.addEventListener("timeupdate", function() {
-    var timeLeftElement = document.getElementById('timeleft'),
+    var timeLeftElement = document.getElementById('time-left'),
         songDuration = audioPlayer.duration,
         currentTime = audioPlayer.currentTime,
         timeLeft = songDuration - currentTime,
@@ -179,7 +209,7 @@ audioPlayer.addEventListener("timeupdate", function() {
         timeLeftElement.innerHTML = m + ":" + s;    
 }, false);
 
-// Countup
+// Count up
 audioPlayer.addEventListener("timeupdate", function() {
     var timeLineElement = document.getElementById('duration');
     var s = Math.floor(audioPlayer.currentTime % 60);
@@ -196,20 +226,21 @@ audioPlayer.addEventListener("timeupdate", function() {
 function nextSong() {
   let position = (currentSong.position += 1);
 
-  if (position > totalTracks - 1) {
+  if (position > totalTracks) {
     audioPlayer.pause();
   } else {
     allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentSong.album_id);
     currentSong = (allSongsFromCurrentAlbum.filter(
       (song: { [x: string]: any; }) => (song["position"] === position)))[0];
+    console.log("🚀 ~ file: renderer.ts:236 ~ nextSong ~ NEXTcurrentSong:", currentSong)
     playThisSong();
   }
 };
 
 // Prev song
 function prevSong() {
-  let position = (currentSong.position)
-  if (position > 2) position -= 1;  
+  let position = currentSong.position
+  if (position >= 2) position -= 1;  
   if (position > totalTracks - 1) {
     audioPlayer.pause();
   } else {
@@ -221,12 +252,25 @@ function prevSong() {
 };
 
 // progress bar
-// 1- convertir currentTime en % par rapport à songDuration
+// 1- convert currentTime en % par rapport à songDuration
 function displayProgressionBar({ currentTime, songDuration }) {
-  // const {currentTime, songDuration} = e.target;
+  // const { currentTime, songDuration } = e.target;
   const progressPercent = (currentTime * 100) / songDuration;
+  console.log(
+    "🚀 ~ file: renderer.ts:228 ~ displayProgressionBar ~ progressPercent:",
+    progressPercent
+  );
   progressBar.style.width = `${progressPercent}%`;
 }
 
+progressContainer.addEventListener("click", playHere);
 // if we click on the progress bar we can it must change the currentTime
-function update() {}
+function playHere(e) {
+  const width = this.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audioPlayer.duration;
+
+  audioPlayer.currentTime = (clickX / width) * duration;
+}
+
+audioPlayer.addEventListener('ended', nextSong);
