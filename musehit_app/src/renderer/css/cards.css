@@ -6,14 +6,14 @@
     padding: 16px;
     gap: 16px;
     border: rgba(var(--dark-blue), .5) 1px solid;
-    border-radius: var(--br-sm);
+    border-radius: var(--s);
 
     width: 164px;
     height: 246px;
 }
 .album-cover {
     width: 164px;
-    border-radius: var(--br-sm);
+    border-radius: var(--s);
 }
 
 
