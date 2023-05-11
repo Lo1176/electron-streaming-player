@@ -1,9 +1,10 @@
-.footer-player {
+#footer-player {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 16px 0;
+    height: var(--footer-height);
+    padding: var(--ml) 0;
     display: flex;
     background-color: var(--white);
 }
@@ -35,14 +36,26 @@
     align-items: center;
 }
 
+.time {
+    font-weight: 100;
+}
+
 #bottom-height {
     /* height must be as minimum footer-player height */
-    height: 92px;
+    height: calc(var(--footer-height) + 2*var(--ml) + var(--s));
 }
 
 /* progress bar */
-.progress-container {
+#progress-container {
     height: 3px;
     background-color: grey;
     width: 100%;
+    pointer-events: visible;
+}
+
+#progress-bar {
+    background-color: pink;
+    width: 0%;
+    height: 5px;
+
 }
