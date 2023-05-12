@@ -161,6 +161,7 @@ function pauseSong() {
 const playThisSong = () => {
   audioPlayer.src = `./../public/uploads/${currentSong.path}`;
   playSong();
+  displayProgressBar();
   if (currentSong.position === 1) {
     prevBtn.classList.add('disabled')
 
@@ -191,7 +192,7 @@ prevBtn.addEventListener("click", () => {
   prevSong();
 });
 
-// Countdown
+// Count down => time left
 audioPlayer.addEventListener("timeupdate", function() {
     var timeLeftElement = document.getElementById('time-left'),
         songDuration = audioPlayer.duration,
@@ -209,7 +210,7 @@ audioPlayer.addEventListener("timeupdate", function() {
         timeLeftElement.innerHTML = m + ":" + s;    
 }, false);
 
-// Count up
+// Count up => duration
 audioPlayer.addEventListener("timeupdate", function() {
     var timeLineElement = document.getElementById('duration');
     var s = Math.floor(audioPlayer.currentTime % 60);
@@ -253,24 +254,25 @@ function prevSong() {
 
 // progress bar
 // 1- convert currentTime en % par rapport à songDuration
-function displayProgressionBar({ currentTime, songDuration }) {
-  // const { currentTime, songDuration } = e.target;
-  const progressPercent = (currentTime * 100) / songDuration;
+function displayProgressBar(e) {
+  const { currentTime, songDuration } = e.target;
+  const progressPercent =
+    Math.floor(currentTime * 100) / songDuration;
   console.log(
-    "🚀 ~ file: renderer.ts:228 ~ displayProgressionBar ~ progressPercent:",
+    "🚀 ~ file: renderer.ts:228 ~ displayProgressBar ~ progressPercent:",
     progressPercent
   );
-  progressBar.style.width = `${progressPercent}%`;
+  progressBar.style.width = `12%`;
 }
 
-progressContainer.addEventListener("click", playHere);
-// if we click on the progress bar we can it must change the currentTime
-function playHere(e) {
-  const width = this.clientWidth;
-  const clickX = e.offsetX;
-  const duration = audioPlayer.duration;
+// progressContainer.addEventListener("click", playHere);
+// // if we click on the progress bar we can it must change the currentTime
+// function playHere(e) {
+//   const width = this.clientWidth;
+//   const clickX = e.offsetX;
+//   const duration = audioPlayer.duration;
 
-  audioPlayer.currentTime = (clickX / width) * duration;
-}
+//   audioPlayer.currentTime = (clickX / width) * duration;
+// }
 
 audioPlayer.addEventListener('ended', nextSong);
