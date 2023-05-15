@@ -88,7 +88,6 @@ function displayAlbumSongsNames() {
   // currentAlbum = localStorage.album
   allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentAlbum.id);
   totalTracks = allSongsFromCurrentAlbum.length;
-  // console.log('currentAlbum', currentAlbum)
 
   if (!!songsList) songsList.innerHTML = "";
   const divAllSongs = document.createElement("div");
@@ -161,7 +160,6 @@ function pauseSong() {
 const playThisSong = () => {
   audioPlayer.src = `./../public/uploads/${currentSong.path}`;
   playSong();
-  displayProgressBar();
   if (currentSong.position === 1) {
     prevBtn.classList.add('disabled')
 
@@ -170,9 +168,9 @@ const playThisSong = () => {
     prevBtn.classList.remove("disabled");
     nextBtn.classList.remove("disabled");
   }
-  console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position:", currentSong.position)
-  console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ totalTracks:", totalTracks)
-  console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position !== totalTracks:", currentSong.position !== totalTracks)
+  // console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position:", currentSong.position)
+  // console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ totalTracks:", totalTracks)
+  // console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position !== totalTracks:", currentSong.position !== totalTracks)
   if (currentSong.position === totalTracks) {
     nextBtn.classList.add('disabled')
 
@@ -207,7 +205,7 @@ audioPlayer.addEventListener("timeupdate", function() {
         s = s < 10 ? "0" + s : s;
         m = m < 10 ? "0" + m : m;
         
-        timeLeftElement.innerHTML = m + ":" + s;    
+        timeLeftElement.innerHTML = m + ":" + s;  
 }, false);
 
 // Count up => duration
@@ -221,6 +219,7 @@ audioPlayer.addEventListener("timeupdate", function() {
     else {
         timeLineElement.innerHTML = m + ':' + s;
     }
+    updateProgressBar(audioPlayer.currentTime, audioPlayer.duration);
 }, false);
 
 // Next song
@@ -233,7 +232,6 @@ function nextSong() {
     allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentSong.album_id);
     currentSong = (allSongsFromCurrentAlbum.filter(
       (song: { [x: string]: any; }) => (song["position"] === position)))[0];
-    console.log("🚀 ~ file: renderer.ts:236 ~ nextSong ~ NEXTcurrentSong:", currentSong)
     playThisSong();
   }
 };
@@ -254,15 +252,10 @@ function prevSong() {
 
 // progress bar
 // 1- convert currentTime en % par rapport à songDuration
-function displayProgressBar(e) {
-  const { currentTime, songDuration } = e.target;
-  const progressPercent =
-    Math.floor(currentTime * 100) / songDuration;
-  console.log(
-    "🚀 ~ file: renderer.ts:228 ~ displayProgressBar ~ progressPercent:",
-    progressPercent
-  );
-  progressBar.style.width = `12%`;
+function updateProgressBar(currentTime, songDuration) {
+  // const { currentTime, songDuration } = e.target;
+  const progressPercent = Math.floor(currentTime * 100) / songDuration;
+  progressBar.style.width = `${progressPercent}%`;
 }
 
 // progressContainer.addEventListener("click", playHere);
