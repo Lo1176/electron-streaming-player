@@ -48,14 +48,18 @@
 /* progress bar */
 .progress-container {
     height: 3px;
-    background-color: grey;
+    /* background-color: grey; */
+    background-color: var(--white);
     width: 100%;
-    pointer-events: visible;
+    margin: 12px 0;
+    cursor: pointer;
+    /* pointer-events: visible; */
 }
 
 .progress-bar {
-    background-color: pink;
+    background-color: var(--blue);
     width: 0%;
-    height: 5px;
+    height: 3px;
+    transition: width 0.1s linear;
 
 }
