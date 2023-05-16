@@ -62,6 +62,8 @@
     "publish": null
   },
   "dependencies": {
-    "better-sqlite3": "^8.1.0"
+    "better-sqlite3": "^8.1.0",
+    "jsmediatags": "^3.9.7",
+    "music-metadata-browser": "^2.5.10"
   }
 }
