@@ -25,6 +25,12 @@
         </div>
         
         <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
+        <div id="drag-and-drop">
+          <div class="drag-and-drop-container">
+            <h3 class="drag-and-drop-title">Drag and Drop your audio files in this area.</h3>
+
+          </div>
+        </div>
         <!-- <div class="line-separator"></div> -->
       <div id="bottom-height"></div>
       <div id="footer-player" class="player">
@@ -34,13 +40,11 @@
           class="prev-img prev-next-btn player-btn pointer"
           src="./../src/images/previous.svg"
           alt="previous button">
-
           <img 
           id="play"
           class="play-img player-btn pointer"
           src="./../src/images/play-btn.svg"
           alt="play button">
-          
           <img 
           id="next"
           class="next-img prev-next-btn player-btn pointer"
@@ -53,12 +57,11 @@
             <span id="song-name"></span>
             <span id="player-info-content-separator"></span>
             <span id="artist-name"></span>
-            <!-- <span id="album-name"></span> -->
           </div>
           <div class="player-info player-info-duration">
             <span id="duration" class="time">0:00</span>
             <div id="progress-container" class="progress-container">
-              <div id="progress-bar" class="progress-bar "></div>
+              <div id="progress-bar" class="progress-bar"></div>
             </div>
             <span id="time-left" class="time">0:00</span>
           </div>
