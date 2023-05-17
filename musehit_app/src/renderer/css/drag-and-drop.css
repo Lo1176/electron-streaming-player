@@ -4,13 +4,13 @@
     text-align: center;
 }
 
-.drag-and-drop-container {
+#drag-and-drop-container {
     width: 50vw;
     height: 50vw;
     border: 1px dashed var(--dark-blue);
 }
 
-.drag-and-drop-container:hover {
+#drag-and-drop-container:hover {
     background-color: var(--yellow);
 }
 
