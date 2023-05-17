@@ -1,3 +1,14 @@
+
+const jsmediatags = window.jsmediatags;
+
+//test 
+// versions.writeAudioFileIntoApp(
+//   "myfile3.txt",
+//   "titi",
+//   "the text to write in the file",
+//   "utf-8"
+// );
+
 // find all albums
 const albums = versions.findAlbumsByArtist();
 const songsList = document.getElementById("songs-list");
@@ -20,12 +31,12 @@ if (!!audioPlayer) {
 }
 /**************** END ******************/
 
-const isAudioPlaying = !!(
-  audioPlayer.currentTime > 0 &&
-  !audioPlayer.paused &&
-  !audioPlayer.ended 
-  // &&   audioPlayer.readyState > audioPlayer.HAVE_CURRENT_DATA
-);
+// const isAudioPlaying = !!(
+//   audioPlayer.currentTime > 0 &&
+//   !audioPlayer.paused &&
+//   !audioPlayer.ended 
+//   // &&   audioPlayer.readyState > audioPlayer.HAVE_CURRENT_DATA
+// );
 
 const footerPlayer = document.getElementById("footer-player");
 const playBtn = document.getElementById("play") as HTMLImageElement;
@@ -100,14 +111,28 @@ function displayAlbumSongsNames() {
     divSong.setAttribute('class', 'song-info')
     divSong.innerHTML = `
       <div class="content-overlay"></div>
-      <img class="album-cover album-cover-thumb" src="./../public/uploads/${currentAlbum.cover}" alt="album cover">
+      <div>
+        <img class="album-cover album-cover-thumb" src="./../public/uploads/${currentAlbum.cover}" alt="album cover">
+      </div>
+      <div>
+      <div class="toto">
+          <img id='btn-over' class='' src = "./../src/images/play-btn.svg" alt="play button"/>
+      </div>
+      </div>
       <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
     `;
+    const btnOver = document.getElementById("btn-over") as HTMLElement;
     divSong.addEventListener('click', () => {
       currentSong = allSongsFromCurrentAlbum[i];
       // maybe find a better name than playThisSong => it's confused with playSong
       playThisSong();
     });
+    divSong.addEventListener('mouseover', () => {
+      // const name = currentSong.name;
+      // console.log(`mouse over ${allSongsFromCurrentAlbum[i].name}`);
+      btnOver.style.opacity = '1';
+
+    })
     divAllSongs.appendChild(divSong);
   }
 
@@ -120,7 +145,6 @@ playBtn.addEventListener("click", () => {
   const isPlaying = footerPlayer.classList.contains("play");
 
   isPlaying ? pauseSong() : playSong();
-  // playPauseFctn(); // old function
 });
 
 function playSong() {
@@ -136,24 +160,6 @@ function pauseSong() {
   playBtn.src = playIcon,
   audioPlayer.pause();
 }
-// I have to split the playPauseFctn because a song finished it'll pause the next one
-// async function playPauseFctn () {
-//   if (audioPlayer.classList.contains("play")) {
-//     audioPlayer.classList.remove("play"),
-//     audioPlayer.classList.add("pause"),
-//     playBtn.src = playIcon,
-//     audioPlayer.pause();
-//     PLAYER;
-//   } else {
-//     audioPlayer.classList.remove("pause"),
-//     audioPlayer.classList.add("play"),
-//     playBtn.src = pauseIcon,
-//     await audioPlayer.play();
-//     PLAYER;
-//   }
-// }
-
-
 
 /*********** functions for player **************/
 // play a song
@@ -168,19 +174,15 @@ const playThisSong = () => {
     prevBtn.classList.remove("disabled");
     nextBtn.classList.remove("disabled");
   }
-  // console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position:", currentSong.position)
-  // console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ totalTracks:", totalTracks)
-  // console.log("🚀 ~ file: renderer.ts:168 ~ playThisSong ~ currentSong.position !== totalTracks:", currentSong.position !== totalTracks)
+
   if (currentSong.position === totalTracks) {
     nextBtn.classList.add('disabled')
-
   }
 
   // display album information
   songName.innerText = currentSong.name;
   infoContentSeparator.innerText = "•";
   artistName.innerText = currentArtist.name;
-  // PLAYER
 };
 
 nextBtn.addEventListener("click", () => {
@@ -252,20 +254,125 @@ function prevSong() {
 
 // progress bar
 // 1- convert currentTime en % par rapport à songDuration
-function updateProgressBar(currentTime, songDuration) {
+function updateProgressBar(currentTime: number, songDuration: number) {
   // const { currentTime, songDuration } = e.target;
   const progressPercent = Math.floor(currentTime * 100) / songDuration;
   progressBar.style.width = `${progressPercent}%`;
 }
 
-// progressContainer.addEventListener("click", playHere);
-// // if we click on the progress bar we can it must change the currentTime
-// function playHere(e) {
-//   const width = this.clientWidth;
-//   const clickX = e.offsetX;
-//   const duration = audioPlayer.duration;
+progressContainer.addEventListener("click", playHere);
+// if we click on the progress bar we can it must change the currentTime
+function playHere(e: { offsetX: any; }) {
+  const width = this.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audioPlayer.duration;
 
-//   audioPlayer.currentTime = (clickX / width) * duration;
-// }
+  audioPlayer.currentTime = (clickX / width) * duration;
+}
 
 audioPlayer.addEventListener('ended', nextSong);
+
+/********* Drag and Drop Zone  ************/
+const dragAndDropContainer = document.getElementById("drag-and-drop-container") as HTMLElement;
+dragAndDropContainer.addEventListener("drop", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  var path: string
+
+  for (const file of event.dataTransfer.files) {
+    // Using the path attribute to get absolute file path
+    // console.log("File Path of dragged FILES: ", file.path);
+    path = file.path
+
+    // console.log("File information: ", file);
+    jsmediatags.read(file, {
+      onSuccess: async function (tag: { tags: { title: string; album: string; artist: string; }; }) {
+        document.getElementById("drag-and-drop-song-title").innerText =
+          tag.tags.title;
+        document.getElementById("drag-and-drop-song-album-title").innerText =
+          tag.tags.album;
+        document.getElementById("drag-and-drop-song-artist").innerText =
+          tag.tags.artist;
+        console.log("tag: ", tag);
+        await versions.writeAudioFileIntoApp(tag.tags?.title, tag.tags?.album, file);
+      },
+      onError: function (error) {
+        console.log(":(", error.type, error.info);
+      },
+    });
+    // saveAudioFile(event);
+  }
+  // ipcRenderer.send('ondragstart', path)
+
+  for (const file of event.dataTransfer.items) {
+    console.log("File ITEMS: ", file);
+  }
+  for (const file of event.dataTransfer.dropEffect) {
+    console.log("File dropEffect: ", file);
+  }
+});
+
+dragAndDropContainer.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+});
+
+// error dynamic Electron ... 
+// versions.ipcRenderer('fileData', (event) => {
+//   console.log("🚀 ~ file: renderer.ts:335 ~ ipcRenderer.on ~ event:", event)
+
+// });
+
+dragAndDropContainer.addEventListener("dragenter", (event) => {
+  // dragAndDropContainer.style.backgroundColor = "red";
+  console.log("File is in the Drop Space");
+  
+ 
+});
+
+dragAndDropContainer.addEventListener("dragleave", (event) => {
+  console.log("File has left the Drop Space");
+});
+
+  
+// var save = document.getElementById('save');
+  
+// const saveAudioFile = (event) => {
+//   // Resolves to a Promise<Object>
+//   dialogElectron
+//     .showSaveDialog({
+//       title: "Select the File Path to save",
+//       defaultPath: path.join(__dirname, "../public/uploads/"),
+//       // defaultPath: path.join(__dirname, '../assets/'),
+//       // buttonLabel: "Save",
+//       // Restricting the user to only Audio Files.
+//       filters: [
+//         {
+//           name: "Audio Files",
+//           extensions: ["mp3", "ogg", "wav"],
+//         },
+//       ],
+//       properties: [],
+//     })
+//     .then((file) => {
+//       // Stating whether dialog operation was cancelled or not.
+//       console.log(file.canceled);
+//       if (!file.canceled) {
+//         console.log(file.filePath.toString());
+
+//         // Creating and Writing to the sample.txt file
+//         fs.writeFile(
+//           file.filePath.toString(),
+//           "This is a Sample File",
+//           function (err) {
+//             if (err) throw err;
+//             console.log("Saved!");
+//           }
+//         );
+//       }
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// };
