@@ -15,3 +15,21 @@
 .player-btn:hover {
   /* background-color: aqua; */
 }
+
+.toto {
+  opacity: 0;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: undefined;
+  color: red;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
