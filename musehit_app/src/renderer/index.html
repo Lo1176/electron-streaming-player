@@ -3,9 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';"> -->
+  <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+
+
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
+   <script type="text/javascript" src="jsmediatags.min.js"></script>
   <!-- <link rel="import" href="album.html" /> -->
 </head>
 <body>
@@ -26,8 +30,12 @@
         
         <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
         <div id="drag-and-drop">
-          <div class="drag-and-drop-container">
+          <div id="drag-and-drop-container">
             <h3 class="drag-and-drop-title">Drag and Drop your audio files in this area.</h3>
+            <p id="drag-and-drop-song-title"></p>
+            <p id="drag-and-drop-song-album-title"></p>
+            <p id="drag-and-drop-song-artist"></p>
+
 
           </div>
         </div>
@@ -72,16 +80,8 @@
     </aside>
     </div>
     
-    <script type="text/javascript" src="../dist/renderer.js">
-      // var fs = require('fs');
-
-    // document.getElementById('my-button').addEventListener('click', function() {
-    //     fs.readFile('album.html', function (err, data) {
-    //         document.getElementById('my-div').innerHTML = data.toString()
-    //     })
-    //     alert('album')
-    // })
-  </script>
+   
+    <script type="text/javascript" src="../dist/renderer.js"></script>
 
 </body>
 </html>
