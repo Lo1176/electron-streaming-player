@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from "electron";
 import { is } from 'electron-util'
+import fs from "fs";
 import * as path from 'path'
 
 let win: BrowserWindow | null = null
@@ -67,6 +68,21 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (win === null && app.isReady()) {
     createWindow()
+  }
+})
+
+ipcMain.on('ondragstart', (event, filePath) => {
+  readFile(filePath);
+
+  function readFile(filePath) {
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+      if (err) {
+        alert('an error occurred in reading the file: ' + err.message);
+        return;
+      }
+      event.sender.send('fileData', data)
+    })
+
   }
 })
 
