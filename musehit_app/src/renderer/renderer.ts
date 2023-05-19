@@ -67,7 +67,7 @@ var defaultCover = "default-cover.png"
 // meme avec un async await j'ai deux fois mes <a></a> dans le browser. Pourquoi ?
 async function showAllAlbums() {
   for ( let i = 0; i < albums.length; i++) {
-    const artistInfo = await versions.findArtist(albums[i].artist_id);
+    const artistInfo = await versions.findArtistById(albums[i].artist_id);
     const div = document.createElement('div');
     const cover = (albums[i].cover !== 'NULL') ? albums[i].cover : defaultCover;
     // link to page is not working :
@@ -272,30 +272,68 @@ function playHere(e: { offsetX: any; }) {
 
 audioPlayer.addEventListener('ended', nextSong);
 
+/******** TESTING AREA  ************/
+ const testAllArtists = [
+  {id: 4, name: 'Alabama Shakes'},
+  {id: 2, name: 'Michael Jackson'},
+  {id: 1, name: 'The Beatles'},
+  {id: 3, name: 'Wolfgang Amadeus Mozart'}
+ ]
+//  console.log(
+//    "🚀 ~ file: preload.ts:50 ~ findAllArtists Alabama Shakes: ",
+//   //  versions.returnIdIfArtistExist("Alabama Shakes")
+//   // findAllart
+//  );
+ 
 /********* Drag and Drop Zone  ************/
 const dragAndDropContainer = document.getElementById("drag-and-drop-container") as HTMLElement;
 dragAndDropContainer.addEventListener("drop", (event) => {
   event.preventDefault();
   event.stopPropagation();
 
-  var path: string
+  var path: string;
 
   for (const file of event.dataTransfer.files) {
     // Using the path attribute to get absolute file path
     // console.log("File Path of dragged FILES: ", file.path);
-    path = file.path
+    path = file.path;
 
-    // console.log("File information: ", file);
+    // console.log("File typeof information: ", typeof file);
     jsmediatags.read(file, {
-      onSuccess: async function (tag: { tags: { title: string; album: string; artist: string; }; }) {
+      onSuccess: async function (tag: {
+        tags: { title: string; album: string; artist: string };
+      }) {
+        const songTitleFromFileUploaded = tag.tags.title;
+        const albumTitleFromFileUploaded = tag.tags.album;
+        const artistNameFromFileUploaded = tag.tags.artist;
+
+        const artist = versions.findArtistByName(artistNameFromFileUploaded);
+        console.log("*******findArtistByName: ", artist);
+        if (artist !== undefined) {
+          // if artistNameFromFileUploaded exist we fetch is id,
+          const artistId = artist.id;
+          // create album linked to artist id if it is not exist
+          const album = versions.isAlbumExist(albumTitleFromFileUploaded);
+
+          // create song linked to album id
+        } else {
+          // if artist is undefined => add a new artist
+          const newArtist = versions.addArtist(artistNameFromFileUploaded);
+          alert(
+            `we just created a new artist named ${artistNameFromFileUploaded}`
+          );
+          console.log(newArtist)
+        }
+        
+        // display tags information into drop Area
         document.getElementById("drag-and-drop-song-title").innerText =
-          tag.tags.title;
+            songTitleFromFileUploaded;
         document.getElementById("drag-and-drop-song-album-title").innerText =
-          tag.tags.album;
+          albumTitleFromFileUploaded;
         document.getElementById("drag-and-drop-song-artist").innerText =
-          tag.tags.artist;
+          artistNameFromFileUploaded;
         console.log("tag: ", tag);
-        await versions.writeAudioFileIntoApp(tag.tags?.title, tag.tags?.album, file);
+        await versions.writeAudioFileIntoApp(file);
       },
       onError: function (error) {
         console.log(":(", error.type, error.info);
@@ -308,9 +346,11 @@ dragAndDropContainer.addEventListener("drop", (event) => {
   for (const file of event.dataTransfer.items) {
     console.log("File ITEMS: ", file);
   }
-  for (const file of event.dataTransfer.dropEffect) {
-    console.log("File dropEffect: ", file);
-  }
+
+  // dropEffect: https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect
+  // for (const file of event.dataTransfer.dropEffect) {
+  //   console.log("File dropEffect: ", file);
+  // }
 });
 
 dragAndDropContainer.addEventListener("dragover", (e) => {
@@ -325,10 +365,7 @@ dragAndDropContainer.addEventListener("dragover", (e) => {
 // });
 
 dragAndDropContainer.addEventListener("dragenter", (event) => {
-  // dragAndDropContainer.style.backgroundColor = "red";
   console.log("File is in the Drop Space");
-  
- 
 });
 
 dragAndDropContainer.addEventListener("dragleave", (event) => {
