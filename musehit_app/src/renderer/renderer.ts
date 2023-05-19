@@ -306,23 +306,57 @@ dragAndDropContainer.addEventListener("drop", (event) => {
         const songTitleFromFileUploaded = tag.tags.title;
         const albumTitleFromFileUploaded = tag.tags.album;
         const artistNameFromFileUploaded = tag.tags.artist;
-
         const artist = versions.findArtistByName(artistNameFromFileUploaded);
-        console.log("*******findArtistByName: ", artist);
+        let artistId: number;
+        let album: {};
+        let song: {};
+
+        // console.log("*******findArtistByName: ", artist);
         if (artist !== undefined) {
           // if artistNameFromFileUploaded exist we fetch is id,
-          const artistId = artist.id;
+          artistId = artist.id;
           // create album linked to artist id if it is not exist
-          const album = versions.isAlbumExist(albumTitleFromFileUploaded);
+          album = versions.findAlbumByName(albumTitleFromFileUploaded);
+          
+          if (!!album) {
+            alert('we already have this album in db')
+            // create song linked to album id
+            song = versions.findSongByName(songTitleFromFileUploaded);
 
-          // create song linked to album id
+          } else {
+            const newAlbum = versions.addAlbum(
+              albumTitleFromFileUploaded,
+              artistId,
+              "public/uploads/default-cover.png"
+            );
+
+            alert(
+              `we just created a new album named ${albumTitleFromFileUploaded}`
+            );
+            console.log("newAlbum: ", newAlbum);
+
+          }
+
         } else {
           // if artist is undefined => add a new artist
           const newArtist = versions.addArtist(artistNameFromFileUploaded);
           alert(
             `we just created a new artist named ${artistNameFromFileUploaded}`
           );
-          console.log(newArtist)
+          console.log("newArtist: ", newArtist);
+          // create album ?
+          const newAlbum = versions.addAlbum(
+            albumTitleFromFileUploaded,
+            artistId,
+            "public/uploads/default-cover.png"
+          );
+          alert(
+            `we just created a new album named ${albumTitleFromFileUploaded}`
+          );
+          console.log("newAlbum: ", newAlbum);
+          // create song ?
+          /************ CREATE SONG IF IT DOES'NT EXIST **********/
+
         }
         
         // display tags information into drop Area
