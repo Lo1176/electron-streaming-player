@@ -6,13 +6,7 @@ const path = require('path')
 // simple example to record Text file at root
 // fs.writeFileSync('./public/uploads/titi/myfile3.txt', 'the text to write in the file', 'utf-8');
 
-
-
-// testing to save audio file into good repo
-// defaultPath: path.join(__dirname, "../public/uploads/");
-
 export let versions: any = contextBridge.exposeInMainWorld("versions", {
-  // ipcRendererOn: () => { return ipcRenderer},
   findAllSongs: () => {
     const allSongsFromCatalog = db.prepare("select * from songs").all();
     return allSongsFromCatalog;
@@ -39,27 +33,52 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return song[0];
   },
 
-  findArtist: (artist_id: string) => {
+  findArtistById: (artist_id: string) => {
     const artistInfo = db
       .prepare(`SELECT * FROM "artists" WHERE id = ${artist_id}`)
       .all();
     return artistInfo[0];
   },
 
+  findArtistByName: (artist_name: string) => {
+    const artistInfo = db
+      .prepare(`SELECT * FROM "artists" WHERE name = '${artist_name}'`)
+      .all();
+    return artistInfo[0];
+  },
+
+  addArtist: (name: string) => {
+    const newArtist = db
+      .prepare(`INSERT INTO artists (name) VALUES (?);`)
+    newArtist.run(name)
+      return newArtist;
+  },
+
   ensureDirectoryExistence(filePath: string) {
-    console.log("🚀 ~ file: preload.ts:50 ~ ensureDirectoryExistence ~ filePath:", filePath)
     // var dirname = path.dirname(filePath);
     return fs.existsSync(filePath) ? true : fs.mkdirSync(filePath);
   },
 
-  writeAudioFileIntoApp: (songName: any, albumName: any, file: any) => {
-    console.log(
-      "ful path from writeAudioFileIntoApp: ",
-      `./public/uploads/toto/${albumName}`
-    );
+  writeAudioFileIntoApp(file: { key: string; value: any }) {
+    console.log("🚀 ~ **********file: preload.ts:56 ~ file:", file)
+    // console.log(
+    //   "full path from writeAudioFileIntoApp: ",
+    //   `./public/uploads/toto/${albumName}`
+    // );
     // versions.ensureDirectoryExistence(`./public/uploads/toto/${albumName}`);
-    fs.writeFileSync(`./public/uploads/${albumName}/${songName}`, file, "utf-8");
+    // fs.writeFile( file, data, options, callback )
+    // fs.writeFileSync(
+    //   `./public/uploads/${albumName}/${songName}`,
+    //   file,
+    //   "utf-8"
+    // );
+    fs.writeFile("books.txt", file, (err: string) => {
+      if (err) console.log(err);
+      else {
+        console.log("File written successfully\n");
+        console.log("The written has the following contents:");
+        console.log(fs.readFileSync("books.txt", "utf8"));
+      }
+    });
   },
-
 });
-
