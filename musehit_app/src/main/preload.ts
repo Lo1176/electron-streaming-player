@@ -17,7 +17,23 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return rows;
   },
 
+  findAlbumByName: (album_name: string) => {
+    // beware: use simple quote and not double quote
+    const album = db
+    .prepare(`SELECT * FROM  albums WHERE name = '${album_name}'`)
+    .all()
+    return album[0]
+  },
+  
+  addAlbum: (album_name: string, artist_id: number, cover: string) => {
+    const newAlbum = db
+    .prepare('INSERT INTO album (name, artist_id, cover) VALUES (?, ?, ?)')
+    .run(album_name, artist_id, cover);
+    return newAlbum
+  },
+  
   findAllSongsByAlbumID: (id: string) => {
+    // beware: use simple quote and not double quote
     const rows = db
       .prepare(`SELECT * FROM  songs WHERE album_id = ${id};`)
       .all();
