@@ -49,6 +49,12 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return song[0];
   },
 
+  addSong: () => {
+    const newSong = db
+    /******* TO BE FINISHED *******/
+      .prepare()
+  }
+
   findArtistById: (artist_id: string) => {
     const artistInfo = db
       .prepare(`SELECT * FROM "artists" WHERE id = ${artist_id}`)
