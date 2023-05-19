@@ -15,7 +15,7 @@ const songsList = document.getElementById("songs-list");
 if (!!document.getElementById("audioPlayer")) {
   var audioPlayer = <HTMLVideoElement>document.getElementById("audioPlayer");
 }
-/************ PLAYER INFOS ***************/
+/******* PLAYER INFOS *********/
 if (!!audioPlayer) {
   var PLAYER = console.log(
     "🚀 ~ PLAYER_INFO ~ ",
@@ -29,14 +29,27 @@ if (!!audioPlayer) {
     audioPlayer.readyState
   );
 }
-/**************** END ******************/
+/** end */
 
-// const isAudioPlaying = !!(
-//   audioPlayer.currentTime > 0 &&
-//   !audioPlayer.paused &&
-//   !audioPlayer.ended 
-//   // &&   audioPlayer.readyState > audioPlayer.HAVE_CURRENT_DATA
-// );
+/******* tables from DB *********/
+type Artist = {
+  id?: number;
+  name?: string;
+}
+type Album = {
+  name?: string;
+  artist_id?: number;
+  cover?: string;
+  id?: number;
+}
+type Song = {
+  id?: number;
+  name?: string;
+  path?: string;
+  position?: number;
+  album_id?: number;
+};
+/** end */
 
 const footerPlayer = document.getElementById("footer-player");
 const playBtn = document.getElementById("play") as HTMLImageElement;
@@ -273,17 +286,12 @@ function playHere(e: { offsetX: any; }) {
 audioPlayer.addEventListener('ended', nextSong);
 
 /******** TESTING AREA  ************/
- const testAllArtists = [
-  {id: 4, name: 'Alabama Shakes'},
-  {id: 2, name: 'Michael Jackson'},
-  {id: 1, name: 'The Beatles'},
-  {id: 3, name: 'Wolfgang Amadeus Mozart'}
- ]
-//  console.log(
-//    "🚀 ~ file: preload.ts:50 ~ findAllArtists Alabama Shakes: ",
-//   //  versions.returnIdIfArtistExist("Alabama Shakes")
-//   // findAllart
-//  );
+//  const testAllArtists = [
+//   {id: 4, name: 'Alabama Shakes'},
+//   {id: 2, name: 'Michael Jackson'},
+//   {id: 1, name: 'The Beatles'},
+//   {id: 3, name: 'Wolfgang Amadeus Mozart'}
+//  ]
  
 /********* Drag and Drop Zone  ************/
 const dragAndDropContainer = document.getElementById("drag-and-drop-container") as HTMLElement;
@@ -301,75 +309,105 @@ dragAndDropContainer.addEventListener("drop", (event) => {
     // console.log("File typeof information: ", typeof file);
     jsmediatags.read(file, {
       onSuccess: async function (tag: {
-        tags: { title: string; album: string; artist: string };
+        tags: { title: string; album: string; artist: string; track: string };
       }) {
         const songTitleFromFileUploaded = tag.tags.title;
         const albumTitleFromFileUploaded = tag.tags.album;
         const artistNameFromFileUploaded = tag.tags.artist;
-        const artist = versions.findArtistByName(artistNameFromFileUploaded);
-        let artistId: number;
-        let album: {};
-        let song: {};
+        const songPositionFromFileUploaded =
+        parseInt(tag.tags.track.split("/")[0]);
+        const artist = versions.findArtistByName(
+          artistNameFromFileUploaded
+        );
+        // let album: Album = {};
+        // let song: Song = {};
 
         // console.log("*******findArtistByName: ", artist);
         if (artist !== undefined) {
-          // if artistNameFromFileUploaded exist we fetch is id,
-          artistId = artist.id;
-          // create album linked to artist id if it is not exist
-          album = versions.findAlbumByName(albumTitleFromFileUploaded);
-          
+          // if artistNameFromFileUploaded exist we fetch his id,
+          // let artistId = artist.id;
+          // create new album linked to artist id if it isn't exist
+          console.log(`The artist: ${artist.name} already exist in db`)
+          const album: Album = {} = versions.findAlbumByName(albumTitleFromFileUploaded);
           if (!!album) {
-            alert('we already have this album in db')
+            console.log(`we already have the album ${album.name} in db`);
             // create song linked to album id
-            song = versions.findSongByName(songTitleFromFileUploaded);
-
+            console.log("🚀 ~ file: renderer.ts:337 ~ dragAndDropContainer.addEventListener ~ songTitleFromFileUploaded:", songTitleFromFileUploaded)
+            const song = versions.findSongByName(songTitleFromFileUploaded);
+            // console.log("🚀 ~ file: renderer.ts:341 ~ dragAndDropContainer.addEventListener ~ song:", song)
+            if (!!song) {
+              // console.log("🚀 ~ file: renderer.ts:339 ~ dragAndDropContainer.addEventListener ~ song:", song)
+              console.log(`we already have the song ${song.name} in db`);
+            } else {
+              // create song linked to album id
+              const newSong: Song = ({} = versions.addSong(
+                songTitleFromFileUploaded,
+                path,
+                album.id,
+                songPositionFromFileUploaded
+              ));
+              console.log(
+                `we just created a new song named ${songTitleFromFileUploaded}`
+              );
+              console.log("newSong: ", newSong);
+            }
           } else {
+            // create new album linked to artist id if it isn't exist
+            // console.log("🚀 ~ file: renderer.ts:367 ~ dragAndDropContainer.addEventListener ~ artist.id:", artist.id)
             const newAlbum = versions.addAlbum(
               albumTitleFromFileUploaded,
-              artistId,
+              artist.id,
               "public/uploads/default-cover.png"
             );
 
-            alert(
-              `we just created a new album named ${albumTitleFromFileUploaded}`
+            console.log(
+              `we've just created a new album named ${albumTitleFromFileUploaded}`
             );
             console.log("newAlbum: ", newAlbum);
-
           }
-
         } else {
           // if artist is undefined => add a new artist
           const newArtist = versions.addArtist(artistNameFromFileUploaded);
-          alert(
+          console.log(
             `we just created a new artist named ${artistNameFromFileUploaded}`
           );
           console.log("newArtist: ", newArtist);
           // create album ?
+          //***** artist.id is undefined */
           const newAlbum = versions.addAlbum(
             albumTitleFromFileUploaded,
-            artistId,
+            newArtist.id,
             "public/uploads/default-cover.png"
           );
           alert(
             `we just created a new album named ${albumTitleFromFileUploaded}`
           );
-          console.log("newAlbum: ", newAlbum);
+          console.log("newAlbum: ", newAlbum, ",id ", newAlbum.id);
           // create song ?
           /************ CREATE SONG IF IT DOES'NT EXIST **********/
-
+          const newSong = versions.addSong(
+            songTitleFromFileUploaded,
+            path,
+            newAlbum.id,
+            songPositionFromFileUploaded
+          );
+          alert(
+            `we just created a new song named ${songTitleFromFileUploaded}`
+          );
+          console.log("newSong: ", newSong);
         }
-        
+
         // display tags information into drop Area
         document.getElementById("drag-and-drop-song-title").innerText =
-            songTitleFromFileUploaded;
+          songTitleFromFileUploaded;
         document.getElementById("drag-and-drop-song-album-title").innerText =
           albumTitleFromFileUploaded;
         document.getElementById("drag-and-drop-song-artist").innerText =
           artistNameFromFileUploaded;
-        console.log("tag: ", tag);
+        // console.log("tag: ", tag);
         await versions.writeAudioFileIntoApp(file);
       },
-      onError: function (error) {
+      onError: function (error: any) {
         console.log(":(", error.type, error.info);
       },
     });
@@ -392,12 +430,6 @@ dragAndDropContainer.addEventListener("dragover", (e) => {
   e.stopPropagation();
 });
 
-// error dynamic Electron ... 
-// versions.ipcRenderer('fileData', (event) => {
-//   console.log("🚀 ~ file: renderer.ts:335 ~ ipcRenderer.on ~ event:", event)
-
-// });
-
 dragAndDropContainer.addEventListener("dragenter", (event) => {
   console.log("File is in the Drop Space");
 });
@@ -405,45 +437,3 @@ dragAndDropContainer.addEventListener("dragenter", (event) => {
 dragAndDropContainer.addEventListener("dragleave", (event) => {
   console.log("File has left the Drop Space");
 });
-
-  
-// var save = document.getElementById('save');
-  
-// const saveAudioFile = (event) => {
-//   // Resolves to a Promise<Object>
-//   dialogElectron
-//     .showSaveDialog({
-//       title: "Select the File Path to save",
-//       defaultPath: path.join(__dirname, "../public/uploads/"),
-//       // defaultPath: path.join(__dirname, '../assets/'),
-//       // buttonLabel: "Save",
-//       // Restricting the user to only Audio Files.
-//       filters: [
-//         {
-//           name: "Audio Files",
-//           extensions: ["mp3", "ogg", "wav"],
-//         },
-//       ],
-//       properties: [],
-//     })
-//     .then((file) => {
-//       // Stating whether dialog operation was cancelled or not.
-//       console.log(file.canceled);
-//       if (!file.canceled) {
-//         console.log(file.filePath.toString());
-
-//         // Creating and Writing to the sample.txt file
-//         fs.writeFile(
-//           file.filePath.toString(),
-//           "This is a Sample File",
-//           function (err) {
-//             if (err) throw err;
-//             console.log("Saved!");
-//           }
-//         );
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
