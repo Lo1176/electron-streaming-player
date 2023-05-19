@@ -34,10 +34,18 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   
   findAllSongsByAlbumID: (id: string) => {
     // beware: use simple quote and not double quote
-    const rows = db
+    const songs = db
       .prepare(`SELECT * FROM  songs WHERE album_id = ${id};`)
       .all();
-    return rows;
+    return songs;
+  },
+
+  findSongByName: (name: string) => {
+    /** PROBLEMS HERE when having a ' inside the name  */
+    const song = db
+      .prepare(`SELECT * FROM songs WHERE name = '${name}'`)
+      .all()
+    return (!!song) ? song[0] : false;
   },
 
   findSong: (album_id: string, song_position: 1) => {
@@ -49,11 +57,12 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return song[0];
   },
 
-  addSong: () => {
+  addSong: (name: string, path: string, album_id: number, position: number) => {
     const newSong = db
-    /******* TO BE FINISHED *******/
-      .prepare()
-  }
+      .prepare(`INSERT INTO songs ('name', 'path', 'album_id', 'position') VALUES (?, ?, ?, ?)`)
+      .run(name, path, album_id, position)
+    return newSong
+  },
 
   findArtistById: (artist_id: string) => {
     const artistInfo = db
