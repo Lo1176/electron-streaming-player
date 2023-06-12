@@ -17,6 +17,10 @@ bonus
     Have buttons to raise the sound, to accelerate the music
     Have a beautiful design
 
+bonus week 3
+add and then display the release date of an album
+add and then display the presence of a second artist on a song from an album (for example, Michael Jackson released Thriller, but Paul McCartney participates on the song The Girl is Mine)
+manage double albums. like The Beatles' White Album
 ## start your app usning : ##
 $> yarn
 $> yarn dev
