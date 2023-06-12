@@ -1,6 +1,6 @@
 .btn-ghost {
   color: #4A4A4A;
-  border: 1px solid #4A4A4A;
+  border: 1px solid var(--blue);
   padding: 8px 24px;
   border-radius: 50px;
   font-weight: lighter;
@@ -16,20 +16,29 @@
   /* background-color: aqua; */
 }
 
-.toto {
-  opacity: 0;
+.admin-btn {
+  display: flex;
+  float: right;
+}
+
+/* .toto {
+  /* opacity: 1; */
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  color: undefined;
+  background-color: aquamarine;
+  margin: 12px;
+  padding: 12px;
+  /* color: undefined; */
   color: red;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  /* display: -webkit-flex;
+  display: -ms-flexbox; */
   display: flex;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  left: 0;
+  float: right;
+  /* left: 0;
   position: absolute;
-  top: 0;
-}
+  top: 0; */
+} */
