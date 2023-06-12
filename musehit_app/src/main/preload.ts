@@ -25,9 +25,17 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return album[0]
   },
   
+  findAlbumByArtistId: (id: string) => {
+    // beware: use simple quote and not double quote
+    const album = db
+    .prepare(`SELECT * FROM  albums WHERE artist_id = '${id}'`)
+    .all()
+    return album[0]
+  },
+
   addAlbum: (album_name: string, artist_id: number, cover: string) => {
     const newAlbum = db
-    .prepare('INSERT INTO album (name, artist_id, cover) VALUES (?, ?, ?)')
+    .prepare('INSERT INTO albums (name, artist_id, cover) VALUES (?, ?, ?)')
     .run(album_name, artist_id, cover);
     return newAlbum
   },
@@ -91,11 +99,11 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   writeAudioFileIntoApp(file: { key: string; value: any }) {
-    console.log("🚀 ~ **********file: preload.ts:56 ~ file:", file)
-    // console.log(
-    //   "full path from writeAudioFileIntoApp: ",
-    //   `./public/uploads/toto/${albumName}`
-    // );
+    console.log("🚀 ~ **********file: preload.ts:102 ~ file:", file)
+    console.log(
+      "full path from writeAudioFileIntoApp: ",
+      `./public/uploads/toto/${albumName}`
+    );
     // versions.ensureDirectoryExistence(`./public/uploads/toto/${albumName}`);
     // fs.writeFile( file, data, options, callback )
     // fs.writeFileSync(
@@ -103,13 +111,14 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     //   file,
     //   "utf-8"
     // );
-    fs.writeFile("books.txt", file, (err: string) => {
-      if (err) console.log(err);
-      else {
-        console.log("File written successfully\n");
-        console.log("The written has the following contents:");
-        console.log(fs.readFileSync("books.txt", "utf8"));
-      }
-    });
+
+    // fs.writeFile("books.txt", file, (err: string) => {
+    //   if (err) console.log(err);
+    //   else {
+    //     console.log("File written successfully\n");
+    //     console.log("The written has the following contents:");
+    //     console.log(fs.readFileSync("books.txt", "utf8"));
+    //   }
+    // });
   },
 });
