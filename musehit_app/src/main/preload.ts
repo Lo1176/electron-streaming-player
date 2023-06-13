@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 const db = require('better-sqlite3')('./resources/jukebox.db');
 const fs = require('fs');
-const path = require('path')
+// const path = require('path')
 
 // simple example to record Text file at root
 // fs.writeFileSync('./public/uploads/titi/myfile3.txt', 'the text to write in the file', 'utf-8');
@@ -33,11 +33,13 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return album[0];
   },
 
-  addAlbum: (album_name: string, artist_id: number, cover: string) => {
-    const newAlbum = db
-      .prepare("INSERT INTO albums (name, artist_id, cover) VALUES (?, ?, ?)")
-      .run(album_name, artist_id, cover);
-    return newAlbum;
+  findAlbumByArtistIdAndAlbumName: (album_name: string, artist_id: number) => {
+    const album = db
+      .prepare(
+        `SELECT * FROM  albums WHERE name = '${album_name}' AND artist_id = ${artist_id}`
+      )
+      .all();
+    return album[0];
   },
 
   findAllSongsByAlbumID: (id: string) => {
@@ -61,6 +63,13 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
       )
       .all();
     return song[0];
+  },
+
+  addAlbum: (album_name: string, artist_id: number, cover: string) => {
+    const newAlbum = db
+      .prepare("INSERT INTO albums ('name', 'artist_id', 'cover') VALUES (?, ?, ?)")
+      .run(album_name, artist_id, cover);
+    console.log("addAlbum: ",newAlbum);
   },
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
@@ -98,9 +107,11 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     songName: string
   ) {
     function ensureDirectoryExistence(filePath: string) {
-      
-      console.log("🚀 ~ file: preload.ts:103 ~ ensureDirectoryExistence ~ fs.existsSync(filePath):", fs.existsSync(filePath))
-      return fs.existsSync(filePath)
+      console.log(
+        "🚀 ~ file: preload.ts:103 ~ ensureDirectoryExistence ~ fs.existsSync(filePath):",
+        fs.existsSync(filePath)
+      );
+      return fs.existsSync(filePath);
     }
     function createDirectory(filePath: string) {
       fs.mkdirSync(filePath, { recursive: true });
@@ -119,16 +130,15 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
           );
         } else {
           console.log(
-            "la chanson\n",
+            "la chanson: ",
             file.name,
-            "\npath: ",
+            "\n a été copiée dans le path: ",
             uploadPath
           );
-      }});
-
+        }
+      });
     }
-    // console.log("🚀 ~*** writeAudioFileIntoApp: preload.ts:102 ~ file:", file);
-    const dirPath: string = `./public/uploads/${albumName}`
+    const dirPath: string = `./public/uploads/${albumName}`;
     const uploadPath: string = `${dirPath}/${songName}.mp3`;
     if (!ensureDirectoryExistence(dirPath)) {
       console.log(
@@ -142,4 +152,18 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
       CopyNewSong();
     }
   },
+
+  formattedAlbumName(name: string) {name.toLowerCase().split(' ').join('-');},
+
+  saveImage(cover: string, albumName: string) {
+    const formattedAlbumName = versions.formattedAlbumName(albumName);
+    fs.writeFile(
+      `./public/uploads/${albumName}/${formattedAlbumName}-cover.png`,
+      cover,
+      "base64",
+      function (err: string) {
+        console.log(err);
+      }
+    );
+  }
 });
