@@ -353,16 +353,13 @@ dragAndDropContainer.addEventListener("drop", (event) => {
 
           /** next step verifier si l'album est déjà dans la DB */
           if (albumExist) {
-            console.log(
-              "L'album existe dans la DB vérifions si nous avons déjà cette chanson ..."
-            );
             const album: Album = ({} = versions.findAlbumByName(
               albumTitleFromDragAndDrop
-            ));
-            console.log(
-              "🚀 ~ file: renderer.ts:334 ~ dragAndDropContainer.addEventListener ~ versions.findAlbumByName(albumTitleFromDragAndDrop):",
-              versions.findAlbumByName(albumTitleFromDragAndDrop)
-            );
+              ));
+              console.log(
+                `L'album ${album.name} existe dans la DB vérifions si nous avons déjà cette chanson ...`
+              );
+
           } else {
             if (album.name !== undefined) {
               console.log(`we already have the album ${album.name} in db`);
@@ -443,7 +440,11 @@ dragAndDropContainer.addEventListener("drop", (event) => {
         document.getElementById("drag-and-drop-song-artist").innerText =
           artistNameFromDragAndDrop;
         // console.log("tag: ", tag);
-        await versions.writeAudioFileIntoApp(file);
+        await versions.writeAudioFileIntoApp(
+          file,
+          albumTitleFromDragAndDrop,
+          songTitleFromDragAndDrop
+        );
       },
       onError: function (error: any) {
         console.log(":(", error.type, error.info);

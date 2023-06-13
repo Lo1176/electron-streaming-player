@@ -20,26 +20,26 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAlbumByName: (album_name: string) => {
     // beware: use simple quote and not double quote
     const album = db
-    .prepare(`SELECT * FROM  albums WHERE name = '${album_name}'`)
-    .all()
-    return album[0]
+      .prepare(`SELECT * FROM  albums WHERE name = '${album_name}'`)
+      .all();
+    return album[0];
   },
-  
+
   findAlbumByArtistId: (id: string) => {
     // beware: use simple quote and not double quote
     const album = db
-    .prepare(`SELECT * FROM  albums WHERE artist_id = '${id}'`)
-    .all()
-    return album[0]
+      .prepare(`SELECT * FROM  albums WHERE artist_id = '${id}'`)
+      .all();
+    return album[0];
   },
 
   addAlbum: (album_name: string, artist_id: number, cover: string) => {
     const newAlbum = db
-    .prepare('INSERT INTO albums (name, artist_id, cover) VALUES (?, ?, ?)')
-    .run(album_name, artist_id, cover);
-    return newAlbum
+      .prepare("INSERT INTO albums (name, artist_id, cover) VALUES (?, ?, ?)")
+      .run(album_name, artist_id, cover);
+    return newAlbum;
   },
-  
+
   findAllSongsByAlbumID: (id: string) => {
     // beware: use simple quote and not double quote
     const songs = db
@@ -50,10 +50,8 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
 
   findSongByName: (name: string) => {
     /** PROBLEMS HERE when having a ' inside the name  */
-    const song = db
-      .prepare(`SELECT * FROM songs WHERE name = '${name}'`)
-      .all()
-    return (!!song) ? song[0] : false;
+    const song = db.prepare(`SELECT * FROM songs WHERE name = '${name}'`).all();
+    return !!song ? song[0] : false;
   },
 
   findSong: (album_id: string, song_position: 1) => {
@@ -67,9 +65,11 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
     const newSong = db
-      .prepare(`INSERT INTO songs ('name', 'path', 'album_id', 'position') VALUES (?, ?, ?, ?)`)
-      .run(name, path, album_id, position)
-    return newSong
+      .prepare(
+        `INSERT INTO songs ('name', 'path', 'album_id', 'position') VALUES (?, ?, ?, ?)`
+      )
+      .run(name, path, album_id, position);
+    return newSong;
   },
 
   findArtistById: (artist_id: string) => {
@@ -87,38 +87,59 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   addArtist: (name: string) => {
-    const newArtist = db
-      .prepare(`INSERT INTO artists (name) VALUES (?);`)
-    newArtist.run(name)
-      return newArtist;
+    const newArtist = db.prepare(`INSERT INTO artists (name) VALUES (?);`);
+    newArtist.run(name);
+    return newArtist;
   },
 
-  ensureDirectoryExistence(filePath: string) {
-    // var dirname = path.dirname(filePath);
-    return fs.existsSync(filePath) ? true : fs.mkdirSync(filePath);
-  },
+  writeAudioFileIntoApp(
+    file: { key: string; value: any },
+    albumName: string,
+    songName: string
+  ) {
+    function ensureDirectoryExistence(filePath: string) {
+      
+      console.log("🚀 ~ file: preload.ts:103 ~ ensureDirectoryExistence ~ fs.existsSync(filePath):", fs.existsSync(filePath))
+      return fs.existsSync(filePath)
+    }
+    function createDirectory(filePath: string) {
+      fs.mkdirSync(filePath, { recursive: true });
+    }
 
-  writeAudioFileIntoApp(file: { key: string; value: any }) {
-    console.log("🚀 ~ **********file: preload.ts:102 ~ file:", file)
-    console.log(
-      "full path from writeAudioFileIntoApp: ",
-      `./public/uploads/toto/${albumName}`
-    );
-    // versions.ensureDirectoryExistence(`./public/uploads/toto/${albumName}`);
-    // fs.writeFile( file, data, options, callback )
-    // fs.writeFileSync(
-    //   `./public/uploads/${albumName}/${songName}`,
-    //   file,
-    //   "utf-8"
-    // );
+    function CopyNewSong() {
+      fs.copyFile(file.path, uploadPath, (err: string) => {
+        if (err) {
+          console.log(
+            "Error Found:",
+            err,
+            "file.path: ",
+            file.path,
+            "uploadPath: ",
+            uploadPath
+          );
+        } else {
+          console.log(
+            "la chanson\n",
+            file.name,
+            "\npath: ",
+            uploadPath
+          );
+      }});
 
-    // fs.writeFile("books.txt", file, (err: string) => {
-    //   if (err) console.log(err);
-    //   else {
-    //     console.log("File written successfully\n");
-    //     console.log("The written has the following contents:");
-    //     console.log(fs.readFileSync("books.txt", "utf8"));
-    //   }
-    // });
+    }
+    // console.log("🚀 ~*** writeAudioFileIntoApp: preload.ts:102 ~ file:", file);
+    const dirPath: string = `./public/uploads/${albumName}`
+    const uploadPath: string = `${dirPath}/${songName}.mp3`;
+    if (!ensureDirectoryExistence(dirPath)) {
+      console.log(
+        "***** le repertoire n'existe pas je le fabrique avec me petits doigts boudinés: ",
+        "\ndirPath: ",
+        dirPath
+      );
+      createDirectory(dirPath);
+      CopyNewSong();
+    } else {
+      CopyNewSong();
+    }
   },
 });
