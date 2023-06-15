@@ -13,32 +13,10 @@
 }
 
 .player-btn:hover {
-  /* background-color: aqua; */
+  background-color: aqua;
 }
 
 .admin-btn {
   display: flex;
   float: right;
 }
-
-/* .toto {
-  /* opacity: 1; */
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: aquamarine;
-  margin: 12px;
-  padding: 12px;
-  /* color: undefined; */
-  color: red;
-  /* display: -webkit-flex;
-  display: -ms-flexbox; */
-  display: flex;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  float: right;
-  /* left: 0;
-  position: absolute;
-  top: 0; */
-} */

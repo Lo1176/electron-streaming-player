@@ -1,12 +1,14 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge } from 'electron';
 const db = require('better-sqlite3')('./resources/jukebox.db');
 const fs = require('fs');
-// const path = require('path')
-
-// simple example to record Text file at root
-// fs.writeFileSync('./public/uploads/titi/myfile3.txt', 'the text to write in the file', 'utf-8');
 
 export let versions: any = contextBridge.exposeInMainWorld("versions", {
+  findAllFeatures: () => {
+    const allFeatures = db.prepare("SELECT * from FEATURES").all();
+    const {artist_id, song_id}: {artist_id: string, song_id: string } = allFeatures[0]; 
+    return { artist_id, song_id };
+  },
+
   findAllSongs: () => {
     const allSongsFromCatalog = db.prepare("select * from songs").all();
     return allSongsFromCatalog;
@@ -53,23 +55,37 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findSongByName: (name: string) => {
     /** PROBLEMS HERE when having a ' inside the name  */
     const song = db.prepare(`SELECT * FROM songs WHERE name = '${name}'`).all();
-    return !!song ? song[0] : false;
+    return !!song && song[0];
   },
 
-  findSong: (album_id: string, song_position: 1) => {
-    const song = db
-      .prepare(
-        `SELECT * FROM  "songs" WHERE album_id = ${album_id} AND position = ${song_position}; `
-      )
-      .all();
-    return song[0];
+  findSongById: (id: string) => {
+    const song = db.prepare(`SELECT * FROM songs WHERE id = ${id}`)
+    return !!song && song[0];
+
   },
 
-  addAlbum: (album_name: string, artist_id: number, cover: string) => {
+  // findSong: (album_id: string, song_position: 1) => {
+  //   const song = db
+  //     .prepare(
+  //       `SELECT * FROM  "songs" WHERE album_id = ${album_id} AND position = ${song_position}; `
+  //     )
+  //     .all();
+  //   return song[0];
+  // },
+
+  addAlbum: (
+    album_name: string,
+    artist_id: number,
+    release_date: string,
+    disk: string,
+    genre: string,
+    cover: string
+  ) => {
     const newAlbum = db
-      .prepare("INSERT INTO albums ('name', 'artist_id', 'cover') VALUES (?, ?, ?)")
-      .run(album_name, artist_id, cover);
-    console.log("addAlbum: ",newAlbum);
+      .prepare(
+        "INSERT INTO albums ('name', 'artist_id', 'release_date', 'disk', 'genre', 'cover') VALUES (?, ?, ?, ?, ?, ?)"
+      )
+      .run(album_name, artist_id, release_date, disk, genre, cover);
   },
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
@@ -81,9 +97,10 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return newSong;
   },
 
-  findArtistById: (artist_id: string) => {
+  findArtistById: (artist_id: string | number) => {
+    const id = artist_id.toString();    
     const artistInfo = db
-      .prepare(`SELECT * FROM "artists" WHERE id = ${artist_id}`)
+      .prepare(`SELECT * FROM "artists" WHERE id = ${id}`)
       .all();
     return artistInfo[0];
   },
@@ -107,10 +124,6 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     songName: string
   ) {
     function ensureDirectoryExistence(filePath: string) {
-      console.log(
-        "🚀 ~ file: preload.ts:103 ~ ensureDirectoryExistence ~ fs.existsSync(filePath):",
-        fs.existsSync(filePath)
-      );
       return fs.existsSync(filePath);
     }
     function createDirectory(filePath: string) {
@@ -153,17 +166,20 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     }
   },
 
-  formattedAlbumName(name: string) {name.toLowerCase().split(' ').join('-');},
+  formattedAlbumName(name: string) {
+    name.toLowerCase().split(" ").join("-");
+  },
 
-  saveImage(cover: string, albumName: string) {
-    const formattedAlbumName = versions.formattedAlbumName(albumName);
+  saveImage(cover: string, path: string) {
+    const formattedName = versions.formattedAlbumName(albumName);
+    console.log("🚀 ~ file: preload.ts:175 ~ saveImage ~ formattedAlbumName:", formattedName)
     fs.writeFile(
-      `./public/uploads/${albumName}/${formattedAlbumName}-cover.png`,
+      path,
       cover,
       "base64",
       function (err: string) {
         console.log(err);
       }
     );
-  }
+  },
 });

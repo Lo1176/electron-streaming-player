@@ -1,4 +1,3 @@
-
 const jsmediatags = window.jsmediatags;
 
 // find all albums
@@ -69,6 +68,7 @@ var currentAlbum = undefined
 var currentArtist = undefined
 var defaultCover = "default-cover.png"
 
+const { artist_id, song_id } = versions.findAllFeatures();
 // meme avec un async await j'ai deux fois mes <a></a> dans le browser. Pourquoi ?
 async function showAllAlbums() {
   for ( let i = 0; i < albums.length; i++) {
@@ -132,12 +132,10 @@ function displayAlbumSongsNames() {
       // maybe find a better name than playThisSong => it's confused with playSong
       playThisSong();
     });
-    divSong.addEventListener('mouseover', () => {
-      // const name = currentSong.name;
-      // console.log(`mouse over ${allSongsFromCurrentAlbum[i].name}`);
-      btnOver.style.opacity = '1';
-
+    !!btnOver && divSong.addEventListener('mouseover', () => {
+        btnOver.style.opacity = '1';
     })
+    
     divAllSongs.appendChild(divSong);
   }
 
@@ -306,29 +304,50 @@ dragAndDropContainer.addEventListener("drop", (event) => {
           track: string;
           title: string;
           picture: object;
+          year: string;
+          genre: string;
+          volume: object;
         };
       }) {
         const songTitleFromDragAndDrop = tag.tags.title;
         const albumTitleFromDragAndDrop = tag.tags.album;
+        const releaseDate = tag.tags.year ? tag.tags.year : "";
+        const genre = tag.tags.genre ? tag.tags.genre : "";
+        const disk = tag.tags.volume?.disk ? tag.tags.volume?.disk : 1
         /** comment copier l'image dans la db
          * je dois typer cover
          */
         type coverProps = { data: any; format: any };
         const cover = tag.tags.picture;
-        
+        console.log(
+          "🚀 ~ file: renderer.ts:496 ~ dragAndDropContainer.addEventListener ~ tag:",
+          tag
+        );
+
         let base64String = "";
         for (let i = 0; i < cover.data.length; i++) {
           base64String += String.fromCharCode(cover.data[i]);
         }
         /**imageUri */
         const albumImageUri = window.btoa(base64String);
+        
         /** save image into public/uploads */
-        const createCoverImage = versions.saveImage(albumImageUri, albumTitleFromDragAndDrop);
+        const createCoverImage = () => {
+          const formattedName = versions.formattedAlbumName(
+            albumTitleFromDragAndDrop
+          );
+          const imagePath = `./public/uploads/${albumTitleFromDragAndDrop}/${formattedName}-cover.png`;
+          versions.saveImage(
+            albumImageUri,
+            imagePath
+          )
+        };
         const artistNameFromDragAndDrop = tag.tags.artist;
         const songPositionFromDragAndDrop = parseInt(
           tag.tags.track.split("/")[0]
         );
-        const artistInfos: {id: string | number, name: string} = versions.findArtistByName(artistNameFromDragAndDrop);
+        const artistInfos: { id: string | number; name: string } =
+          versions.findArtistByName(artistNameFromDragAndDrop);
         let album: Album = {};
         let song: Song = {};
         /******#
@@ -337,12 +356,18 @@ dragAndDropContainer.addEventListener("drop", (event) => {
          * #
          * #*******/
         /** CREATE ARTIST */
-        const createArtist = versions.addArtist(artistNameFromDragAndDrop);
+        const createArtist = (artistName: string) => {
+          versions.addArtist(artistName);
+          console.log(
+            `we just created a new artist named ${artistName}`
+          );
+        }
         /** CREATE ALBUM */
         /** CREATE SONG */
         console.log("*******findArtistByName: ", !!artistInfos);
         /** les infos de l'artist existent-elles ou pas ? */
         if (!!artistInfos) {
+          // 1/a ARTIST is already in the DB next step 1/b
           console.log(`The artist: ${artistInfos.name} already exist in db`);
           /**  artistNameFromDragAndDrop already exists in DB we fetch its id, */
           // const albumInfos = versions.findAlbumByArtistId(artistInfos.id);
@@ -350,7 +375,10 @@ dragAndDropContainer.addEventListener("drop", (event) => {
             artistInfos.id,
             albumTitleFromDragAndDrop
           );
-          console.log("🚀 ~ file: renderer.ts:345 ~ dragAndDropContainer.addEventListener ~ album state:", !!album)
+          console.log(
+            "🚀 ~ file: renderer.ts:345 ~ dragAndDropContainer.addEventListener ~ album state:",
+            album
+          );
           // !!album && console.log(
           //   "🚀 ~ file: renderer.ts:345 ~ dragAndDropContainer.addEventListener ~ album:",
           //   album
@@ -358,14 +386,14 @@ dragAndDropContainer.addEventListener("drop", (event) => {
 
           /** create new album linked to artist id if it isn't exist */
           /** next step verifier si l'album est déjà dans la DB */
-          if (!!album) { // et si le dossier de l'album exist ? ou pas besoin ?
+          if (!!album) {
+            // et si le dossier de l'album exist ? ou pas besoin ?
             // on récupère album.id
 
             console.log(
               `L'album ${album.name} existe déjà dans la DB vérifions si nous avons déjà cette chanson ...\nNEXT STEP create song linked to album id #${album.id}...\n`
             );
             // NEXT STEP create song linked to album id
-            
           } else {
             if (!!album?.name) {
               /** album does't exist in DB so ADD NEW ALBUM
@@ -373,19 +401,23 @@ dragAndDropContainer.addEventListener("drop", (event) => {
                * 2/ créer le folder avec le nom de l'album ?? => a t on besoin de cette étape
                * ou le dossier est directement créé avec le addSong ?
                */
-              console.log(`we already have the album ${album.name} from ${artistInfos.name} in db`);
+              console.log(
+                `we already have the album ${album.name} from ${artistInfos.name} in db`
+              );
               // NEXT STEP => CREATE song linked to album id
 
               const song = versions.findSongByName(songTitleFromDragAndDrop);
               // console.log("🚀 ~ file: renderer.ts:341 ~ dragAndDropContainer.addEventListener ~ song:", song)
               if (!!song) {
-    
                 console.log(`we already have the song ${song.name} in db`);
               } else {
                 // create song linked to album id
                 console.log(
                   "🚀 ~ file: renderer.ts:374 ~ dragAndDropContainer.addEventListener ~ create song linked to album id: \n",
-                  "songTitle: ",songTitleFromDragAndDrop, "\nalbumInfo: ", album 
+                  "songTitle: ",
+                  songTitleFromDragAndDrop,
+                  "\nalbumInfo: ",
+                  album
                 );
                 // const newSong: Song = ({} = versions.addSong(
                 //   songTitleFromDragAndDrop,
@@ -401,7 +433,7 @@ dragAndDropContainer.addEventListener("drop", (event) => {
             } else {
               /**  create new album linked to artist id if it isn't exist */
               // console.log("🚀 ~ file: renderer.ts:367 ~ dragAndDropContainer.addEventListener ~ artist.id:", artist.id)
-              console.log("je suis dans le else")
+              console.log("je suis dans le else");
 
               // versions.addAlbum(
               //   albumTitleFromDragAndDrop,
@@ -412,20 +444,21 @@ dragAndDropContainer.addEventListener("drop", (event) => {
               // console.log(`we've just created a new album named ${newAlbum.name}`);
               // console.log("newAlbum: ", newAlbum);
             }
-                console.log(
-                  "🚀 ~ file: renderer.ts:407 ~ dragAndDropContainer.addEventListener ~     artistInfos.id: ",
-                  artistInfos.id,
-                  "\n albumTitleFromDragAndDrop: ",
-                  albumTitleFromDragAndDrop,
-          
-                );
+            console.log(
+              "🚀 ~ file: renderer.ts:407 ~ dragAndDropContainer.addEventListener ~     artistInfos.id: ",
+              artistInfos.id,
+              "\n albumTitleFromDragAndDrop: ",
+              albumTitleFromDragAndDrop
+            );
           }
         } else {
-          /** artist doesn't exist so we have to ADD THIS NEW ARTIST */
-          createArtist
-          console.log(
-            `we just created a new artist named ${artistNameFromDragAndDrop}`
-          );
+          //
+          /** 2/a
+           *  artist doesn't exist so we have to ADD THIS NEW ARTIST 
+           *  next step 2/b
+           * */
+          createArtist(artistNameFromDragAndDrop);
+          
           const newArtist = versions.findArtistByName(
             artistNameFromDragAndDrop
           );
@@ -437,42 +470,24 @@ dragAndDropContainer.addEventListener("drop", (event) => {
           /** CREATE COVER IMAGE */
           createCoverImage;
           //***** newArtist.id is undefined ? **/
-          // const formattedAlbumName = versions.formattedAlbumName(albumTitleFromDragAndDrop);
+
+          const formattedAlbumName = versions.formattedAlbumName(
+            albumTitleFromDragAndDrop
+          );
+
+          
+          // here insert createANewAlbum(albumInfos)
           versions.addAlbum(
             albumTitleFromDragAndDrop,
             newArtist.id,
-            // QUEL EST CE PATH ??? JE NE SAIS PLUS ??
-            // FORMAT ALB£UM NAME HERE ????
-            `${albumTitleFromDragAndDrop}/${albumTitleFromDragAndDrop}-cover.png`
+            releaseDate,
+            disk,
+            genre,
+            `${albumTitleFromDragAndDrop}/${formattedAlbumName}-cover.png`
           );
-          console.log(
-            `we just created a new album named ${albumTitleFromDragAndDrop}`
-          );
-          console.log(
-            "🚀 ~ file: renderer.ts:456 ~ dragAndDropContainer.addEventListener ~ albumTitleFromDragAndDrop:",
-            albumTitleFromDragAndDrop
-          );
-          console.log("newArtist.id: ", newArtist.id);
-
-          const toto = versions.findAlbumByArtistIdAndAlbumName(
-            albumTitleFromDragAndDrop,
-            newArtist.id
-          );
-          // toto is undefined ??? Why
-          console.log("🚀 ~ file: renderer.ts:443 ~ dragAndDropContainer.addEventListener ~ toto:", toto)
-          // create song ?
-          /************ CREATE SONG IF IT DOES'NT EXIST **********/
-          // const newSong = versions.addSong(
-          //   songTitleFromDragAndDrop,
-          //   path,
-          //   newAlbum.id, // undefined ??? pourquoi
-          //   songPositionFromDragAndDrop
-          // );
+            // here insert createANewSong(song)
           alert(`we just created a new song named ${songTitleFromDragAndDrop}`);
-          // console.log("newSong: ", newSong);
         }
-           
-            
 
         // display tags information into drop Area
         document.getElementById("drag-and-drop-song-title").innerText =
@@ -488,6 +503,7 @@ dragAndDropContainer.addEventListener("drop", (event) => {
           songTitleFromDragAndDrop
         );
       },
+        
       onError: function (error: any) {
         console.log(":(", error.type, error.info);
       },
@@ -497,7 +513,10 @@ dragAndDropContainer.addEventListener("drop", (event) => {
   // ipcRenderer.send('ondragstart', path)
 
   for (const file of event.dataTransfer.items) {
-    console.log("File ITEMS: ", file);
+    // console.log("File ITEMS: ", file);
+    file.type
+    const isTypeAudio = file.type === "audio/mpeg" ? true : false
+    console.log("🚀 ~ file: renderer.ts:526 ~ dragAndDropContainer.addEventListener ~ isTypeAudio:", isTypeAudio)
   }
 
   // dropEffect: https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect
