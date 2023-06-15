@@ -2,10 +2,15 @@ import { contextBridge } from 'electron';
 const db = require('better-sqlite3')('./resources/jukebox.db');
 const fs = require('fs');
 
+function formattedAlbumName(name: string) {
+    return name.toLowerCase().split(" ").join("-");
+  }
+
 export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAllFeatures: () => {
     const allFeatures = db.prepare("SELECT * from FEATURES").all();
-    const {artist_id, song_id}: {artist_id: string, song_id: string } = allFeatures[0]; 
+    const { artist_id, song_id }: { artist_id: string; song_id: string } =
+      allFeatures[0];
     return { artist_id, song_id };
   },
 
@@ -27,15 +32,15 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return album[0];
   },
 
-  findAlbumByArtistId: (id: string) => {
+  findAllAlbumsByArtistId: (id: string) => {
     // beware: use simple quote and not double quote
     const album = db
       .prepare(`SELECT * FROM  albums WHERE artist_id = '${id}'`)
       .all();
-    return album[0];
+    return album;
   },
 
-  findAlbumByArtistIdAndAlbumName: (album_name: string, artist_id: number) => {
+  findAlbumByArtistIdAndAlbumName: (artist_id: number, album_name: string) => {
     const album = db
       .prepare(
         `SELECT * FROM  albums WHERE name = '${album_name}' AND artist_id = ${artist_id}`
@@ -59,9 +64,8 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   findSongById: (id: string) => {
-    const song = db.prepare(`SELECT * FROM songs WHERE id = ${id}`)
+    const song = db.prepare(`SELECT * FROM songs WHERE id = ${id}`);
     return !!song && song[0];
-
   },
 
   // findSong: (album_id: string, song_position: 1) => {
@@ -85,7 +89,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
       .prepare(
         "INSERT INTO albums ('name', 'artist_id', 'release_date', 'disk', 'genre', 'cover') VALUES (?, ?, ?, ?, ?, ?)"
       )
-      .run(album_name, artist_id, release_date, disk, genre, cover);
+      .run(formattedAlbumName(album_name), artist_id, release_date, disk, genre, cover);
   },
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
@@ -98,7 +102,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   findArtistById: (artist_id: string | number) => {
-    const id = artist_id.toString();    
+    const id = artist_id.toString();
     const artistInfo = db
       .prepare(`SELECT * FROM "artists" WHERE id = ${id}`)
       .all();
@@ -118,6 +122,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return newArtist;
   },
 
+  // ne copie plus dans le bon dossier formatté
   writeAudioFileIntoApp(
     file: { key: string; value: any },
     albumName: string,
@@ -129,7 +134,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     function createDirectory(filePath: string) {
       fs.mkdirSync(filePath, { recursive: true });
     }
-
+    console.log("***$$***: ", file)
     function CopyNewSong() {
       fs.copyFile(file.path, uploadPath, (err: string) => {
         if (err) {
@@ -166,20 +171,14 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     }
   },
 
-  formattedAlbumName(name: string) {
-    name.toLowerCase().split(" ").join("-");
-  },
+  
+  formattedAlbumName(name: string) {formattedAlbumName(name)},
 
-  saveImage(cover: string, path: string) {
-    const formattedName = versions.formattedAlbumName(albumName);
-    console.log("🚀 ~ file: preload.ts:175 ~ saveImage ~ formattedAlbumName:", formattedName)
-    fs.writeFile(
-      path,
-      cover,
-      "base64",
-      function (err: string) {
-        console.log(err);
-      }
-    );
+  saveImage(cover: string, path: string, albumName: string) {
+    const formattedName = formattedAlbumName(albumName)
+    fs.writeFile(path, cover, "base64", function (err: string) {
+      console.log(err);
+    });
+    return `${formattedName}/${formattedName}-cover.png`;
   },
 });
