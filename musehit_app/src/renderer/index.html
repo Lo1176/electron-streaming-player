@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';"> -->
   <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
-
-
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
    <script type="text/javascript" src="jsmediatags.min.js"></script>
@@ -22,15 +20,15 @@
           <!-- <a href="album.html" target="my-iframe">Click me</a>
           <iframe name="my-iframe" src="album.html"></iframe> -->
           <div class="admin-btn">
-            <button id="admin-btn" class="btn-ghost">Click me</button>
+            <!-- <button id="admin-btn" onclick="window.location.href='./../../src/renderer/admin.html'" class="btn-ghost">Admin mode</button>
+            <a href='./../../src/renderer/admin.html'>toto click here</a> -->
           </div>
-            <!-- <div id="my-div">First content</div> -->
             <div id="albums-container" class="albums-container">All Albums</div>
           </div>
           <div class="line-separator"></div>
         </div>
         
-        <!-- <div id="songs-list" class="container" onload="displaySongs()">songs-list</div> -->
+        <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
         <div id="drag-and-drop">
           <div id="drag-and-drop-container">
             <h3 class="drag-and-drop-title">Drag and Drop your audio files in this area.</h3>
