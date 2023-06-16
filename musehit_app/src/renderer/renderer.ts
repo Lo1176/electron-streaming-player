@@ -1,3 +1,7 @@
+import createAlbum from "./utils/createAlbum";
+import createArtist from "./utils/createArtist";
+import createSong from "./utils/createSong";
+
 const jsmediatags = window.jsmediatags;
 
 // find all albums
@@ -112,11 +116,10 @@ function displayAlbumSongsNames() {
   const divAllSongs = document.createElement("div");
   // divAllSongs.setAttribute("id", "theSongList"); // maybe add a class but not an id
 
-
   // list all allSongsFromCurrentAlbum
   for (let i = 0; i < allSongsFromCurrentAlbum.length; i++) {
     const divSong = document.createElement("div");
-    divSong.setAttribute('class', 'song-info')
+    divSong.setAttribute("class", "song-info");
     divSong.innerHTML = `
       <div class="content-overlay"></div>
       <div>
@@ -130,21 +133,22 @@ function displayAlbumSongsNames() {
       <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
     `;
     const btnOver = document.getElementById("btn-over") as HTMLElement;
-    divSong.addEventListener('click', () => {
+    divSong.addEventListener("click", () => {
       currentSong = allSongsFromCurrentAlbum[i];
       // maybe find a better name than playThisSong => it's confused with playSong
       playThisSong();
     });
-    !!btnOver && divSong.addEventListener('mouseover', () => {
-        btnOver.style.opacity = '1';
-    })
-    
+    !!btnOver &&
+      divSong.addEventListener("mouseover", () => {
+        btnOver.style.opacity = "1";
+      });
+
     divAllSongs.appendChild(divSong);
   }
 
   songsList.appendChild(divAllSongs); // add ul to the container.
   return totalTracks;
-};
+}
 
 playBtn.addEventListener("click", () => {
   // is the song  playing ?
@@ -311,36 +315,35 @@ dragAndDropContainer.addEventListener("drop", (event) => {
       }) {
         let album: Album = {};
         // let song: Song = {};
+        // type coverProps = { data: any; format: any };
+        console.log("file: tag.tags \n",tag.tags)
         const songTitleFromDragAndDrop = tag.tags.title;
         const albumTitleFromDragAndDrop = tag.tags.album;
         const releaseDate = tag.tags.year ? tag.tags.year : "";
-        /** ajouter le genre lors de la creation d'albums */
-        const genre = tag.tags.genre ? tag.tags.genre : "";
+        const genre = tag.tags.genre !== " " ? tag.tags.genre : " ";
         const disk = tag.tags.volume?.disk ? tag.tags.volume?.disk : 1;
-        // type coverProps = { data: any; format: any };
-        const cover = tag.tags.picture;
-        const songPath: string = `${versions.formattedAlbumName(
-          albumTitleFromDragAndDrop
-        )}/${versions.formattedAlbumName(songTitleFromDragAndDrop)}`;
+        const coverFromMetaData = tag.tags.picture;
+        const formattedAlbumName = versions.formattedName(albumTitleFromDragAndDrop);
+        const formattedSongName = versions.formattedName(songTitleFromDragAndDrop);
+        const songPath: string = `${formattedAlbumName}/${file.name}`;
+        const coverPath: string = `${formattedAlbumName}/${formattedAlbumName}-cover.png`;
+        console.log("🚀 ~ file: renderer.ts:326 ~ dragAndDropContainer.addEventListener ~ songPath:", songPath)
+
 
         let base64String = "";
-        for (let i = 0; i < cover.data.length; i++) {
-          base64String += String.fromCharCode(cover.data[i]);
+        for (let i = 0; i < coverFromMetaData.data.length; i++) {
+          base64String += String.fromCharCode(coverFromMetaData.data[i]);
         }
         /**imageUri */
         const albumImageUri = window.btoa(base64String);
 
         /** save image into public/uploads */
         const createCoverImage = () => {
-          const formattedName = versions.formattedAlbumName(
-            albumTitleFromDragAndDrop
-          );
-          const saveImageToPath = `./public/uploads/${formattedName}/${formattedName}-cover.png`;
+          const saveImageToPath = `./public/uploads/${coverPath}`;
           let albumImagePath: string;
           return albumImagePath = versions.saveImage(
-            albumImageUri,
             saveImageToPath,
-            albumTitleFromDragAndDrop
+            albumImageUri,
           );
           // console.log("🚀 ~ file: renderer.ts:343 ~ createCoverImage ~ albumImagePath:", albumImagePath)
         };
@@ -356,36 +359,9 @@ dragAndDropContainer.addEventListener("drop", (event) => {
          * # define functions #
          * #
          * #*******/
-        /** CREATE ARTIST */
-        const createArtist = (artistName: string) => {
-          versions.addArtist(artistName);
-          console.log(`we just created a new artist named ${artistName}`);
-        };
-        /** CREATE ALBUM */
-        const createAlbum = (
-          album: string,
-          artist_id: string | number,
-          release_date: string,
-          disk: string,
-          genre: string,
-          cover: string
-        ) => {
-          versions.addAlbum(album, artist_id, release_date, disk, genre, cover);
-          console.log(`your album folder named ${album} has been created`);
-        };
-        /** CREATE SONG */
-        const createSong = (
-          name: string,
-          path: string,
-          album_id: number,
-          position: number
-          ) => {
-            console.log(
-              `L'album ${albumTitleFromDragAndDrop} existe déjà dans la DB vérifions si nous avons déjà cette chanson ...\nNEXT STEP create song linked to album id ...\n`
-            );
-            versions.addSong(name, path, album_id, position);
-            console.log(`we just created a new song named ${name}\n`);
-        };
+       
+       
+     
         /*** END -- define functions */
 
 
@@ -461,38 +437,37 @@ dragAndDropContainer.addEventListener("drop", (event) => {
               }
             } else {
               /**  create new album linked to artist id if it isn't exist */
-              // console.log("🚀 ~ file: renderer.ts:367 ~ dragAndDropContainer.addEventListener ~ artist.id:", artist.id)
-              console.log("je suis dans le else");
-              const formattedAlbumName = versions.formattedAlbumName(
-                albumTitleFromDragAndDrop
-              );
-              console.log(
-                "🚀 ~ file: renderer.ts:497 ~ dragAndDropContainer.addEventListener ~ artistInfos.id:",
-                parseInt(artistInfos.id)
-              );
               const currentAlbumFromDragAndDrop = versions.findAlbumByArtistIdAndAlbumName(
                 parseInt(artistInfos.id),
                 albumTitleFromDragAndDrop,
               );
               // is album exist ?? &&
-              
-              console.log("line 478 currentAlbumFromDragAndDrop: ", !currentAlbumFromDragAndDrop);
-              !currentAlbumFromDragAndDrop &&
-                createAlbum(
-                  albumTitleFromDragAndDrop,
-                  parseInt(artistInfos.id),
-                  releaseDate,
-                  disk,
-                  genre,
-                  createCoverImage(),
+                   console.log(
+                     "🚀 ~ file: renderer.ts:464 ~ dragAndDropContainer.addEventListener ~ currentAlbumFromDragAndDrop.id:",
+                     currentAlbumFromDragAndDrop.id
+                   );
+              // !currentAlbumFromDragAndDrop && 
+              //     (createAlbum(
+              //       albumTitleFromDragAndDrop,
+              //       parseInt(artistInfos.id),
+              //       releaseDate,
+              //       disk,
+              //       genre,
+              //       coverPath
+              //     ),
+              //     createCoverImage()
+              //     );
+                createSong(
+                  songTitleFromDragAndDrop,
+                  songPath,
+                  // id undefined here ???
+                  currentAlbumFromDragAndDrop.id,
+                  songPositionFromDragAndDrop
                 );
-              createSong(
-                songTitleFromDragAndDrop,
-                songPath,
-                currentAlbumFromDragAndDrop.id,
-                songPositionFromDragAndDrop
-              );
+            
             }
+         
+         
           }
         } else {
           //
@@ -511,22 +486,16 @@ dragAndDropContainer.addEventListener("drop", (event) => {
           // ADD NEW ALBUM AND SONG INTO DB
           /** CREATE COVER IMAGE */
           console.log('ici')
-          createCoverImage();
-          //***** newArtist.id is undefined ? **/
 
-          // const formattedAlbumName = versions.formattedAlbumName(
-          //   albumTitleFromDragAndDrop
-          // );
-
-          // here insert createANewAlbum(albumsInfos)
           createAlbum(
             albumTitleFromDragAndDrop,
             parseInt(newArtist.id),
             releaseDate,
             disk,
             genre,
-            createCoverImage(),
+            coverPath
           );
+          createCoverImage;
           // here insert createANewSong(song)
           const currentAlbumFromDragAndDrop =
             versions.findAlbumByArtistIdAndAlbumName(
