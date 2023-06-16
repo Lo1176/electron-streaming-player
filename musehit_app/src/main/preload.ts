@@ -2,7 +2,7 @@ import { contextBridge } from 'electron';
 const db = require('better-sqlite3')('./resources/jukebox.db');
 const fs = require('fs');
 
-function formattedAlbumName(name: string) {
+function formattedName(name: string) {
     return name.toLowerCase().split(" ").join("-");
   }
 
@@ -52,8 +52,9 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAllSongsByAlbumID: (id: string) => {
     // beware: use simple quote and not double quote
     const songs = db
-      .prepare(`SELECT * FROM  songs WHERE album_id = ${id};`)
+      .prepare(`SELECT * FROM songs WHERE album_id = ${id} ORDER BY position ASC;`)
       .all();
+      console.log("songs", songs)
     return songs;
   },
 
@@ -89,7 +90,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
       .prepare(
         "INSERT INTO albums ('name', 'artist_id', 'release_date', 'disk', 'genre', 'cover') VALUES (?, ?, ?, ?, ?, ?)"
       )
-      .run(formattedAlbumName(album_name), artist_id, release_date, disk, genre, cover);
+      .run(album_name, artist_id, release_date, disk, genre, cover);
   },
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
@@ -98,6 +99,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
         `INSERT INTO songs ('name', 'path', 'album_id', 'position') VALUES (?, ?, ?, ?)`
       )
       .run(name, path, album_id, position);
+      console.log(`we just created a new song named ${name}\n here ${path}`);
     return newSong;
   },
 
@@ -134,7 +136,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     function createDirectory(filePath: string) {
       fs.mkdirSync(filePath, { recursive: true });
     }
-    console.log("***$$***: ", file)
+    console.log("***$$***: ", file);
     function CopyNewSong() {
       fs.copyFile(file.path, uploadPath, (err: string) => {
         if (err) {
@@ -156,8 +158,8 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
         }
       });
     }
-    const dirPath: string = `./public/uploads/${albumName}`;
-    const uploadPath: string = `${dirPath}/${songName}.mp3`;
+    const dirPath: string = `./public/uploads/${formattedName(albumName)}`;
+    const uploadPath: string = `${dirPath}/${file.name}`;
     if (!ensureDirectoryExistence(dirPath)) {
       console.log(
         "***** le repertoire n'existe pas je le fabrique avec me petits doigts boudinés: ",
@@ -171,14 +173,17 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     }
   },
 
-  
-  formattedAlbumName(name: string) {formattedAlbumName(name)},
+  formattedName(name: string) {
+    return formattedName(name);
+  },
 
-  saveImage(cover: string, path: string, albumName: string) {
-    const formattedName = formattedAlbumName(albumName)
+  saveImage(path: string, cover: string) {
+    console.log("🚀 ~ file: preload.ts:179 ~ saveImage ~ path:", path)
+    // const formattedAlbumName = formattedName(albumName);
+    
     fs.writeFile(path, cover, "base64", function (err: string) {
       console.log(err);
     });
-    return `${formattedName}/${formattedName}-cover.png`;
+    console.log("l'image a été créé, path: ", path, "\ncover: ", cover);
   },
 });
