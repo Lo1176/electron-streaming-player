@@ -314,7 +314,6 @@ dragAndDropContainer.addEventListener("drop", (event) => {
         };
       }) {
         let album: Album = {};
-        // let song: Song = {};
         // type coverProps = { data: any; format: any };
         console.log("file: tag.tags \n",tag.tags)
         const songTitleFromDragAndDrop = tag.tags.title;
@@ -345,7 +344,6 @@ dragAndDropContainer.addEventListener("drop", (event) => {
             saveImageToPath,
             albumImageUri,
           );
-          // console.log("🚀 ~ file: renderer.ts:343 ~ createCoverImage ~ albumImagePath:", albumImagePath)
         };
         const artistNameFromDragAndDrop = tag.tags.artist;
         const songPositionFromDragAndDrop = parseInt(
@@ -395,6 +393,15 @@ dragAndDropContainer.addEventListener("drop", (event) => {
             );
             console.log("🚀 ~ ################ ~ currentAlbumFromDragAndDrop:", currentAlbumFromDragAndDrop, "\nlet's create the song: \n");
             // NEXT STEP create song linked to album id
+            // createSong if song doesn't exist
+            let song: Song = {};
+
+            song = versions.findSongByAlbumIdAndSongName(
+              currentAlbumFromDragAndDrop.id,
+              songTitleFromDragAndDrop
+            );
+            console.log("🚀 ~ file: renderer.ts:404 ~ dragAndDropContainer.addEventListener ~ song:", song)
+            createCoverImage();
             createSong(
               songTitleFromDragAndDrop,
               songPath,
@@ -437,34 +444,19 @@ dragAndDropContainer.addEventListener("drop", (event) => {
               }
             } else {
               /**  create new album linked to artist id if it isn't exist */
-              const currentAlbumFromDragAndDrop = versions.findAlbumByArtistIdAndAlbumName(
-                parseInt(artistInfos.id),
-                albumTitleFromDragAndDrop,
-              );
-              // is album exist ?? &&
-                   console.log(
-                     "🚀 ~ file: renderer.ts:464 ~ dragAndDropContainer.addEventListener ~ currentAlbumFromDragAndDrop.id:",
-                     currentAlbumFromDragAndDrop.id
-                   );
-              // !currentAlbumFromDragAndDrop && 
-              //     (createAlbum(
-              //       albumTitleFromDragAndDrop,
-              //       parseInt(artistInfos.id),
-              //       releaseDate,
-              //       disk,
-              //       genre,
-              //       coverPath
-              //     ),
-              //     createCoverImage()
-              //     );
-                createSong(
-                  songTitleFromDragAndDrop,
-                  songPath,
-                  // id undefined here ???
-                  currentAlbumFromDragAndDrop.id,
-                  songPositionFromDragAndDrop
+              const currentAlbumFromDragAndDrop =
+                versions.findAlbumByArtistIdAndAlbumName(
+                  parseInt(artistInfos.id),
+                  albumTitleFromDragAndDrop
                 );
-            
+              // is album exist ?? &&
+                  createCoverImage();
+              createSong(
+                songTitleFromDragAndDrop,
+                songPath,
+                currentAlbumFromDragAndDrop.id,
+                songPositionFromDragAndDrop
+              );
             }
          
          
@@ -486,7 +478,6 @@ dragAndDropContainer.addEventListener("drop", (event) => {
           // ADD NEW ALBUM AND SONG INTO DB
           /** CREATE COVER IMAGE */
           console.log('ici')
-
           createAlbum(
             albumTitleFromDragAndDrop,
             parseInt(newArtist.id),
@@ -495,8 +486,7 @@ dragAndDropContainer.addEventListener("drop", (event) => {
             genre,
             coverPath
           );
-          createCoverImage;
-          // here insert createANewSong(song)
+          createCoverImage();
           const currentAlbumFromDragAndDrop =
             versions.findAlbumByArtistIdAndAlbumName(
               parseInt(newArtist.id),
@@ -509,7 +499,6 @@ dragAndDropContainer.addEventListener("drop", (event) => {
             currentAlbumFromDragAndDrop.id,
             songPositionFromDragAndDrop
           );
-          alert(`we just created a new song named ${songTitleFromDragAndDrop}`);
         }
 
         // display tags information into drop Area
@@ -519,7 +508,6 @@ dragAndDropContainer.addEventListener("drop", (event) => {
           albumTitleFromDragAndDrop;
         document.getElementById("drag-and-drop-song-artist").innerText =
           artistNameFromDragAndDrop;
-        // console.log("tag: ", tag);
         await versions.writeAudioFileIntoApp(
           file,
           albumTitleFromDragAndDrop,

@@ -69,14 +69,17 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return !!song && song[0];
   },
 
-  // findSong: (album_id: string, song_position: 1) => {
-  //   const song = db
-  //     .prepare(
-  //       `SELECT * FROM  "songs" WHERE album_id = ${album_id} AND position = ${song_position}; `
-  //     )
-  //     .all();
-  //   return song[0];
-  // },
+  findSongByAlbumIdAndSongName: (album_id: string, song_name: string) => {
+
+    const song = db
+      .prepare(
+        `SELECT * FROM songs WHERE album_id = ${album_id} AND name = '${song_name}'; `
+      )
+      .all();
+      console.log("🚀 ~ file: preload.ts:78 ~ song:", song)
+      
+    return song[0];
+  },
 
   addAlbum: (
     album_name: string,
@@ -91,6 +94,10 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
         "INSERT INTO albums ('name', 'artist_id', 'release_date', 'disk', 'genre', 'cover') VALUES (?, ?, ?, ?, ?, ?)"
       )
       .run(album_name, artist_id, release_date, disk, genre, cover);
+      console.log(
+        `we just created a new album named ${album_name}\n from ${artist_id}\n disk ${disk} and genre ${genre} `
+      );
+      return newAlbum;
   },
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
@@ -124,13 +131,12 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return newArtist;
   },
 
-  // ne copie plus dans le bon dossier formatté
   writeAudioFileIntoApp(
     file: { key: string; value: any },
     albumName: string,
     songName: string
   ) {
-    function ensureDirectoryExistence(filePath: string) {
+    function ensurePathExistence(filePath: string) {
       return fs.existsSync(filePath);
     }
     function createDirectory(filePath: string) {
@@ -138,7 +144,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     }
     console.log("***$$***: ", file);
     function CopyNewSong() {
-      fs.copyFile(file.path, uploadPath, (err: string) => {
+      ensurePathExistence(uploadPath) ? console.log(`this path ${uploadPath} already exist into your library`) : fs.copyFile(file.path, uploadPath, (err: string) => {
         if (err) {
           console.log(
             "Error Found:",
@@ -160,12 +166,8 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     }
     const dirPath: string = `./public/uploads/${formattedName(albumName)}`;
     const uploadPath: string = `${dirPath}/${file.name}`;
-    if (!ensureDirectoryExistence(dirPath)) {
-      console.log(
-        "***** le repertoire n'existe pas je le fabrique avec me petits doigts boudinés: ",
-        "\ndirPath: ",
-        dirPath
-      );
+    if (!ensurePathExistence(dirPath)) {
+      console.log(`***** le repertoire n'existe pas je le fabrique avec me petits doigts boudinés:\ndirPath: ${dirPath}`);
       createDirectory(dirPath);
       CopyNewSong();
     } else {
