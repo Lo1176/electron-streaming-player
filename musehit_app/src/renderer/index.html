@@ -8,14 +8,15 @@
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
    <script type="text/javascript" src="jsmediatags.min.js"></script>
-  <!-- <link rel="import" href="album.html" /> -->
 </head>
 <body>
   <div id="main-container">
     <aside>
       <div class="home-page">
         <div class="home-page-navbar">
-          <h1 class="home-page-navbar__title">MuseHit</h1>
+          <a href="./../renderer/index.html">
+            <h1 class="home-page-navbar__title">MuseHit</h1>
+          </a>
           <!-- how to load an other page ? -->
           <!-- <a href="album.html" target="my-iframe">Click me</a>
           <iframe name="my-iframe" src="album.html"></iframe> -->
@@ -23,6 +24,12 @@
             <!-- <button id="admin-btn" onclick="window.location.href='./../../src/renderer/admin.html'" class="btn-ghost">Admin mode</button>
             <a href='./../../src/renderer/admin.html'>toto click here</a> -->
           </div>
+
+          <div class="search-wrapper">
+            <label for="search">search by album-name</label>
+            <input type="search" id="search" data-search>
+
+          </div>  
             <div id="albums-container" class="albums-container">All Albums</div>
           </div>
           <div class="line-separator"></div>
@@ -81,7 +88,9 @@
     </div>
     
    
-    <script type="text/javascript" src="../dist/renderer.js"></script>
+    <script type="text/javascript" src="../dist/renderer.js">
+
+    </script>
 
 </body>
 </html>
