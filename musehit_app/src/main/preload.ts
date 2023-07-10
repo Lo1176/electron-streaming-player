@@ -15,21 +15,33 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   findAllSongs: () => {
-    const allSongsFromCatalog = db.prepare("select * from songs").all();
+    const allSongsFromCatalog = db.prepare("SELECT * FROM songs LIMIT 30").all();
     return allSongsFromCatalog;
   },
 
   findAlbumsByArtist: () => {
-    const rows = db.prepare("SELECT * FROM  albums ORDER BY artist_id;").all();
+    const rows = db.prepare("SELECT * FROM  albums ORDER BY artist_id LIMIT 9;").all();
     return rows;
   },
 
   findAlbumByName: (album_name: string) => {
     // beware: use simple quote and not double quote
     const album = db
-      .prepare(`SELECT * FROM  albums WHERE name = '${album_name}'`)
+      .prepare(`SELECT * FROM  albums WHERE LOWER("name") = '${album_name}'`)
       .all();
     return album[0];
+  },
+
+  searchData(inputString: string) {
+    const data = db
+      // .prepare(
+      //   `SELECT * FROM albums, artists WHERE LOWER(albums.name) OR albums.release_date OR LOWER(artists.name) LIKE '%${inputString}%'`
+      // )
+      .prepare(
+        `SELECT * FROM albums WHERE LOWER(albums.name) LIKE '%${inputString}%'`
+      )
+      .all();
+    return data;
   },
 
   findAllAlbumsByArtistId: (id: string) => {
@@ -43,7 +55,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAlbumByArtistIdAndAlbumName: (artist_id: number, album_name: string) => {
     const album = db
       .prepare(
-        `SELECT * FROM  albums WHERE name = '${album_name}' AND artist_id = ${artist_id}`
+        `SELECT * FROM  albums WHERE LOWER("name") = '${album_name}' AND artist_id = ${artist_id}`
       )
       .all();
     return album[0];
