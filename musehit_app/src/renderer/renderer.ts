@@ -1,10 +1,12 @@
+import { isDataView } from "util/types";
 import createAlbum from "./utils/createAlbum";
 import createArtist from "./utils/createArtist";
 import createSong from "./utils/createSong";
+// import searchBarFunction from "./utils/searchBarFunction"
 
 const jsmediatags = window.jsmediatags;
 
-// find all albums
+// find all albums (first 9)
 const albums = versions.findAlbumsByArtist();
 const songsList = document.getElementById("songs-list");
 if (!!document.getElementById("audioPlayer")) {
@@ -75,16 +77,17 @@ var currentAlbum = undefined
 var currentArtist = undefined
 var defaultCover = "default-cover.png"
 
-const { artist_id, song_id } = versions.findAllFeatures();
-// meme avec un async await j'ai deux fois mes <a></a> dans le browser. Pourquoi ?
+/** 
+ * function to display all albums
+ */
 async function showAllAlbums() {
   for ( let i = 0; i < albums.length; i++) {
     const artistInfo = await versions.findArtistById(albums[i].artist_id);
-    const div = document.createElement('div');
-    const cover = (albums[i].cover !== 'NULL') ? albums[i].cover : defaultCover;
-    // link to page is not working :
-    // <a id='album_${albums[i]}' href="./album.html">
-    div.innerHTML = `
+    // console.log("🚀 ~ file: renderer.ts:83 ~ showAllAlbums ~ artistInfo:", artistInfo)
+    const albumCard = document.createElement("div");
+    const cover = albums[i].cover !== "NULL" ? albums[i].cover : defaultCover;
+    // <a id='album_${albums[i]}' href="./../src/renderer/album.html">
+    albumCard.innerHTML = `
     <a id='album_${albums[i]}' href="#songs-list">
       <div class="album-card">
         <img class="album-cover" src="./../public/uploads/${cover}" alt="album cover">
@@ -94,14 +97,14 @@ async function showAllAlbums() {
       </div>
     </a>
     `;
-    div.addEventListener("click", () => { 
-      currentAlbum = albums[i],
-      currentArtist = artistInfo,
-      displayAlbumSongsNames();
+    albumCard.addEventListener("click", () => {
+      (currentAlbum = albums[i]),
+        (currentArtist = artistInfo),
+        displayAlbumSongsNames();
       // localStorage.setItem('album', currentAlbum);
       localStorage.album = currentAlbum;
     });
-    albumContainer?.appendChild(div);
+    albumContainer?.appendChild(albumCard);
   }
 }
 showAllAlbums();
@@ -540,3 +543,30 @@ dragAndDropContainer.addEventListener("dragenter", (event) => {
 dragAndDropContainer.addEventListener("dragleave", (event) => {
   console.log("File has left the Drop Space");
 });
+
+/** Search Bar Function */
+
+// const searchBarFunction = () => {
+  const searchInput = document.querySelector("[data-search]");
+  // let fetchData = []
+
+
+    searchInput.addEventListener("input", (e) => {
+      // let searchData = []
+      // How to type .data ?? (e.target as HTMLInputElement).value;
+      const value = e.target.value.toLowerCase();
+      // console.log("🚀 ~ file: renderer.ts:557 ~ searchInput.addEventListener ~ value:", value)
+      if (value.length >= 2) {
+        const searchData = versions.searchData(value);
+        console.log(
+          "🚀 ~ file: renderer.ts:560 ~ searchInput.addEventListener ~ searchData:",
+          versions.searchData(value)
+        );
+      }
+      // need to display data.map if searchData.length > 1
+
+      // div.element.classList.toggle("hide", !isVisible)
+    })
+
+// };
+// searchBarFunction();
