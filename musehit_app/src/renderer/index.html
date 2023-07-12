@@ -14,38 +14,33 @@
     <aside>
       <div class="home-page">
         <div class="home-page-navbar">
-          <a href="./../renderer/index.html">
-            <h1 class="home-page-navbar__title">MuseHit</h1>
-          </a>
-          <!-- how to load an other page ? -->
-          <!-- <a href="album.html" target="my-iframe">Click me</a>
-          <iframe name="my-iframe" src="album.html"></iframe> -->
-          <div class="admin-btn">
+          <div>
+            <a href="./index.html">
+              <h1 class="home-page-navbar__title">MuseHit</h1>
+            </a>
+            <!-- how to load an other page ? -->
+            <!-- <a href="album.html" target="my-iframe">Click me</a>
+              <iframe name="my-iframe" src="album.html"></iframe> -->
+              <a href="./../src/renderer/admin.html">
+
+              <button class="btn-ghost admin-btn">Admin Section</button>
+              </a>
+          </div>
             <!-- <button id="admin-btn" onclick="window.location.href='./../../src/renderer/admin.html'" class="btn-ghost">Admin mode</button>
             <a href='./../../src/renderer/admin.html'>toto click here</a> -->
-          </div>
 
           <div class="search-wrapper">
             <label for="search">search by album-name</label>
             <input type="search" id="search" data-search>
 
           </div>  
-            <div id="albums-container" class="albums-container">All Albums</div>
+            <div id="albums-container" class="albums-container" data-album-cards-container>All Albums</div>
           </div>
           <div class="line-separator"></div>
         </div>
         
         <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
-        <div id="drag-and-drop">
-          <div id="drag-and-drop-container">
-            <h3 class="drag-and-drop-title">Drag and Drop your audio files in this area.</h3>
-            <p id="drag-and-drop-song-title"></p>
-            <p id="drag-and-drop-song-album-title"></p>
-            <p id="drag-and-drop-song-artist"></p>
-
-
-          </div>
-        </div>
+        
         <!-- <div class="line-separator"></div> -->
       <div id="bottom-height"></div>
       <div id="footer-player" class="player">
