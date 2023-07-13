@@ -1,7 +1,7 @@
 body {
     /* background-color: #123456; */
     background-color: var(--main-bg-color);
-    /* margin: 12px; */
+    margin: 8px;
 }
 
 .home-page-navbar {
