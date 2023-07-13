@@ -9,9 +9,11 @@ import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
   let defaultCover = "default-cover.png";
   let currentAlbum = undefined;
   let currentArtist = undefined;
-
-async function showAllAlbums(albums) {
-  for (let i = 0; i < albums.length; i++) {
+  
+  
+  async function showAllAlbums(albums) {
+    albumContainer.innerHTML = ""
+    for (let i = 0; i < albums.length; i++) {
     const artistInfo = await versions.findArtistById(albums[i].artist_id);
     // console.log("🚀 ~ file: renderer.ts:83 ~ showAllAlbums ~ artistInfo:", artistInfo)
     const albumCard = document.createElement("div");
