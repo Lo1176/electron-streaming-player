@@ -18,10 +18,10 @@ async function createWindow() {
     // minHeight: 360,
     // minWidth: 800,
     /** desktop */ 
-    // width: 1920,
-    // height: 1080,
-    width: 1200,
-    height: 800,
+    width: 1920,
+    height: 1080,
+    // width: 1200,
+    // height: 800,
     minWidth: 1366,
     minHeight: 768,
     webPreferences: {
