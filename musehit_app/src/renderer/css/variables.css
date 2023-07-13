@@ -1,5 +1,6 @@
 :root {
-  --main-bg-color: #FAFBFE;
+  /* --main-bg-color: #FAFBFE; */
+  --main-bg-color: var(--oxford-blue);
   /* --main-bg-color: black; */
   --white: #fff;
   /* CSS rgb */
@@ -8,12 +9,30 @@
   --light-blue: rgb(105, 197, 246);
   --yellow: rgb(253, 178, 38);
   --orange: rgb(252, 97, 13);
-  /** https://coolors.co/0a4f7a-0b69b1-69c5f6-fdb226-fc610d */
+  
+  /* CSS rgba */
+  --black: rgba(2, 1, 10, 1);
+  --oxford-blue: rgba(4, 5, 46, 1);
+  --federal-blue: rgba(20, 1, 82, 1);
+  --navy-blue: rgba(34, 0, 124, 1);
+  
+  /* SCSS Gradient */
+  --gradient-top: linear-gradient(0deg, #02010aff, #04052eff, #140152ff, #22007cff);
+  --gradient-right: linear-gradient(90deg, #02010aff, #04052eff, #140152ff, #22007cff);
+  --gradient-bottom: linear-gradient(180deg, #02010aff, #04052eff, #140152ff, #22007cff);
+--gradient-left: linear-gradient(270deg, #02010aff, #04052eff, #140152ff, #22007cff);
+--gradient-top-right: linear-gradient(45deg, #02010aff, #04052eff, #140152ff, #22007cff);
+--gradient-bottom-right: linear-gradient(135deg, #02010aff, #04052eff, #140152ff, #22007cff);
+--gradient-top-left: linear-gradient(225deg, #02010aff, #04052eff, #140152ff, #22007cff);
+--gradient-bottom-left: linear-gradient(315deg, #02010aff, #04052eff, #140152ff, #22007cff);
+--gradient-radial: radial-gradient(#02010aff, #04052eff, #140152ff, #22007cff);
+/** https://coolors.co/0a4f7a-0b69b1-69c5f6-fdb226-fc610d */
 
-   --s: 4px;
-   --ms: 8px;
-   --m: 12px;
-   --ml: 16px;
-   --l: 24px;
-   --footer-height: 56px;
+--s: 4px;
+--ms: 8px;
+--m: 12px;
+--ml: 16px;
+--l: 24px;
+--footer-height: 56px;
+
 }
