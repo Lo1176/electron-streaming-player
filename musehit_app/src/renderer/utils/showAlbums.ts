@@ -5,7 +5,6 @@
 import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
 
   let albumContainer = document.getElementById("albums-container");
-//   let albumName = document.getElementById("album-name");
   let defaultCover = "default-cover.png";
   let currentAlbum = undefined;
   let currentArtist = undefined;
@@ -15,7 +14,6 @@ import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
     albumContainer.innerHTML = ""
     for (let i = 0; i < albums.length; i++) {
     const artistInfo = await versions.findArtistById(albums[i].artist_id);
-    // console.log("🚀 ~ file: renderer.ts:83 ~ showAllAlbums ~ artistInfo:", artistInfo)
     const albumCard = document.createElement("div");
     const cover = albums[i].cover !== "NULL" ? albums[i].cover : defaultCover;
     // <a id='album_${albums[i]}' href="./../src/renderer/album.html">
@@ -33,7 +31,6 @@ import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
       (currentAlbum = albums[i]),
         (currentArtist = artistInfo),
         displayAlbumSongsNames();
-      // localStorage.setItem('album', currentAlbum);
       localStorage.album = currentAlbum;
     });
     albumContainer?.appendChild(albumCard);
