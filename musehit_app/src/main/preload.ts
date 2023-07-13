@@ -19,7 +19,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return allSongsFromCatalog;
   },
 
-  findAlbumsByArtist: () => {
+  findAlbumsOrderedByArtist: () => {
     const rows = db.prepare("SELECT * FROM  albums ORDER BY artist_id LIMIT 9;").all();
     return rows;
   },
