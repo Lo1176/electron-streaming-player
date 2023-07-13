@@ -1,8 +1,9 @@
 /********* Search Bar Function  ************/
 
+import { Album } from "../renderer";
 import { showAllAlbums } from "./showAlbums";
 
-const searchBarFunction = (albums) => {
+const searchBarFunction = (albums: Album) => {
     const searchInput = document.querySelector(
     "[data-search]"
     ) as HTMLInputElement | null;
@@ -14,15 +15,28 @@ const searchBarFunction = (albums) => {
     searchInput.addEventListener("input", (e) => {
         const value = (e.target as HTMLInputElement | null)?.value.toLowerCase();
         // const targetCard = document.getElementsByClassName("album-card");
-        let searchDataFiles =[];
+        let dataFromSearchByArtists: Array<string>,
+          dataFromSearchByReleaseDate: Array<string>,
+          dataFromSearchByAlbums: Array<string> = [];
      
 
         
         if (value.length >= 2) {
-            searchDataFiles = versions.searchData(value);
-            showAllAlbums(searchDataFiles)
+            let result = []
+            dataFromSearchByArtists = versions.searchByArtists(value);
+            dataFromSearchByAlbums = versions.searchByAlbums(value);
+            dataFromSearchByReleaseDate = versions.searchByReleaseDate(value);
+            result = [
+              ...new Set([
+                ...dataFromSearchByArtists,
+                ...dataFromSearchByAlbums,
+                ...dataFromSearchByReleaseDate,
+              ]),
+            ];
+            
+            showAllAlbums(result);
         } else {
-          showAllAlbums(albums)  
+          showAllAlbums(albums)
         }
     });
 }

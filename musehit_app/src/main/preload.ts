@@ -15,12 +15,16 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   findAllSongs: () => {
-    const allSongsFromCatalog = db.prepare("SELECT * FROM songs LIMIT 30").all();
+    const allSongsFromCatalog = db
+      .prepare("SELECT * FROM songs LIMIT 30")
+      .all();
     return allSongsFromCatalog;
   },
 
   findAlbumsOrderedByArtist: () => {
-    const rows = db.prepare("SELECT * FROM  albums ORDER BY artist_id LIMIT 9;").all();
+    const rows = db
+      .prepare("SELECT * FROM  albums ORDER BY artist_id LIMIT 9;")
+      .all();
     return rows;
   },
 
@@ -32,17 +36,32 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return album[0];
   },
 
-  searchData(inputString: string) {
-    const data = db
-      // .prepare(
-      //   `SELECT * FROM albums, artists WHERE LOWER(albums.name) OR albums.release_date OR LOWER(artists.name) LIKE '%${inputString}%'`
-      // )
+  searchByAlbums(inputString: string) {
+    const albums = db
       .prepare(
         `SELECT * FROM albums WHERE LOWER(albums.name) LIKE '%${inputString}%'`
       )
       .all();
-    return data;
+    return albums;
   },
+  
+  searchByArtists(inputString: string) {
+    const albums = db
+    .prepare(
+      `SELECT * FROM albums INNER JOIN artists WHERE LOWER(artists.name) LIKE '%${inputString}%' AND artists.id=albums.artist_id`
+      )
+      .all();
+      return albums;
+    },
+    
+    searchByReleaseDate(date: string) {
+      const albums = db
+        .prepare(
+          `SELECT * FROM albums WHERE albums.release_date LIKE '%${date}%'`
+        )
+        .all();
+      return albums;
+    },
 
   findAllAlbumsByArtistId: (id: string) => {
     // beware: use simple quote and not double quote
@@ -64,9 +83,11 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAllSongsByAlbumID: (id: string) => {
     // beware: use simple quote and not double quote
     const songs = db
-      .prepare(`SELECT * FROM songs WHERE album_id = ${id} ORDER BY position ASC;`)
+      .prepare(
+        `SELECT * FROM songs WHERE album_id = ${id} ORDER BY position ASC;`
+      )
       .all();
-      console.log("songs", songs)
+    console.log("songs", songs);
     return songs;
   },
 
@@ -82,14 +103,13 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   findSongByAlbumIdAndSongName: (album_id: string, song_name: string) => {
-
     const song = db
       .prepare(
         `SELECT * FROM songs WHERE album_id = ${album_id} AND name = '${song_name}'; `
       )
       .all();
-      console.log("🚀 ~ file: preload.ts:78 ~ song:", song)
-      
+    console.log("🚀 ~ file: preload.ts:78 ~ song:", song);
+
     return song[0];
   },
 
@@ -106,10 +126,10 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
         "INSERT INTO albums ('name', 'artist_id', 'release_date', 'disk', 'genre', 'cover') VALUES (?, ?, ?, ?, ?, ?)"
       )
       .run(album_name, artist_id, release_date, disk, genre, cover);
-      console.log(
-        `we just created a new album named ${album_name}\n from ${artist_id}\n disk ${disk} and genre ${genre} `
-      );
-      return newAlbum;
+    console.log(
+      `we just created a new album named ${album_name}\n from ${artist_id}\n disk ${disk} and genre ${genre} `
+    );
+    return newAlbum;
   },
 
   addSong: (name: string, path: string, album_id: number, position: number) => {
@@ -118,7 +138,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
         `INSERT INTO songs ('name', 'path', 'album_id', 'position') VALUES (?, ?, ?, ?)`
       )
       .run(name, path, album_id, position);
-      console.log(`we just created a new song named ${name}\n here ${path}`);
+    console.log(`we just created a new song named ${name}\n here ${path}`);
     return newSong;
   },
 
@@ -156,30 +176,34 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     }
     console.log("***$$***: ", file);
     function CopyNewSong() {
-      ensurePathExistence(uploadPath) ? console.log(`this path ${uploadPath} already exist into your library`) : fs.copyFile(file.path, uploadPath, (err: string) => {
-        if (err) {
-          console.log(
-            "Error Found:",
-            err,
-            "file.path: ",
-            file.path,
-            "uploadPath: ",
-            uploadPath
-          );
-        } else {
-          console.log(
-            "la chanson: ",
-            file.name,
-            "\n a été copiée dans le path: ",
-            uploadPath
-          );
-        }
-      });
+      ensurePathExistence(uploadPath)
+        ? console.log(`this path ${uploadPath} already exist into your library`)
+        : fs.copyFile(file.path, uploadPath, (err: string) => {
+            if (err) {
+              console.log(
+                "Error Found:",
+                err,
+                "file.path: ",
+                file.path,
+                "uploadPath: ",
+                uploadPath
+              );
+            } else {
+              console.log(
+                "la chanson: ",
+                file.name,
+                "\n a été copiée dans le path: ",
+                uploadPath
+              );
+            }
+          });
     }
     const dirPath: string = `./public/uploads/${formattedName(albumName)}`;
     const uploadPath: string = `${dirPath}/${file.name}`;
     if (!ensurePathExistence(dirPath)) {
-      console.log(`***** le repertoire n'existe pas je le fabrique avec me petits doigts boudinés:\ndirPath: ${dirPath}`);
+      console.log(
+        `***** le repertoire n'existe pas je le fabrique avec me petits doigts boudinés:\ndirPath: ${dirPath}`
+      );
       createDirectory(dirPath);
       CopyNewSong();
     } else {
@@ -192,9 +216,9 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   },
 
   saveImage(path: string, cover: string) {
-    console.log("🚀 ~ file: preload.ts:179 ~ saveImage ~ path:", path)
+    console.log("🚀 ~ file: preload.ts:179 ~ saveImage ~ path:", path);
     // const formattedAlbumName = formattedName(albumName);
-    
+
     fs.writeFile(path, cover, "base64", function (err: string) {
       console.log(err);
     });
