@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { is } from 'electron-util'
 import fs from "fs";
-import * as path from 'path'
+import path from 'path'
 
 let win: BrowserWindow | null = null
 
@@ -37,9 +37,6 @@ async function createWindow() {
   const isDev = is.development
 
   win.loadFile('./index.html')
-  // win.loadFile('album.html')
-  // win.loadUrl(`/album.html`);
-
 
   win.on('closed', () => {
     win = null

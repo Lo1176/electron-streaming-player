@@ -1,9 +1,9 @@
-import { currentAlbum } from "./showAlbums";
+import { Album, Song } from "./../renderer";
+import { currentArtist, currentAlbum } from "./showAlbums";
 
 /** function to display songs of an album */
-let allSongsFromCurrentAlbum = undefined;
+let allSongsFromCurrentAlbum: Song = undefined;
 let totalTracks = undefined;
-// currentSong to LocalStorage ??? à voir
  let currentSong: {
    album_id: string;
    name: string;
@@ -12,43 +12,38 @@ let totalTracks = undefined;
  };
 const songsList = document.getElementById("songs-list");
 
-
-function displayAlbumSongsNames() {
-  // currentAlbum = localStorage.album
-  allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(currentAlbum.id);
+function displayAlbumSongsNames(album: Album) {
+  // 1. show selected album title + ... ${album.cover} .release_date .name .artist_id ...
+  allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(album.id);
   totalTracks = allSongsFromCurrentAlbum.length;
-
+  
   if (!!songsList) songsList.innerHTML = "";
   const divAllSongs = document.createElement("div");
   // divAllSongs.setAttribute("id", "theSongList"); // maybe add a class but not an id
-
+  
   // list all allSongsFromCurrentAlbum
+  // console.log("🚀 ~ file: displayAlbumSongsNames.ts:16 ~ displayAlbumSongsNames ~ album:", album)
   for (let i = 0; i < allSongsFromCurrentAlbum.length; i++) {
     const divSong = document.createElement("div");
     divSong.setAttribute("class", "song-info");
-
     divSong.innerHTML = `
       <div class="content-overlay"></div>
       <div>
-        <img class="album-cover album-cover-thumb" src="./../public/uploads/${currentAlbum.cover}" alt="album cover">
+      <img class="album-cover album-cover-thumb" src='../../public/uploads/${album.cover}' alt="album cover">
       </div>
       <div>
       <div class="toto">
-          <img id='btn-over' class='' src = "./../src/images/play-btn.svg" alt="play button"/>
+      <img id='btn-over' class='toto' src="../images/play-btn.svg" alt="play button"/>
       </div>
       </div>
       <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
-    `
-
+      `
+      
     const btnOver = document.getElementById("btn-over") as HTMLElement;
-
+    
     divSong.addEventListener("click", () => {
-       currentSong = allSongsFromCurrentAlbum[i];
-       console.log(
-         "🚀 ~ file: displayAlbumSongsNames.ts:25 ~ displayAlbumSongsNames ~ allSongsFromCurrentAlbum[i]:",
-         allSongsFromCurrentAlbum[i]
-       );
-      // maybe find a better name than playThisSong => it's confused with playSong
+      currentSong = allSongsFromCurrentAlbum[i];
+      console.log("🚀 ~ file: displayAlbumSongsNames.ts:47 ~ divSong.addEventListener ~ currentSong:", currentSong)
       playThisSong();
     });
 
@@ -60,18 +55,21 @@ function displayAlbumSongsNames() {
     divAllSongs.appendChild(divSong);
   }
 
-  songsList?.appendChild(divAllSongs); // add ul to the container.
+  songsList.appendChild(divAllSongs); // add ul to the container.
   return totalTracks;
 }
 
-import { currentArtist } from "./showAlbums";
+if (songsList) songsList.onload = function() {displayAlbumSongsNames(currentAlbum)};
 
+/**
+ * Footer player
+ */
 const footerPlayer = document.getElementById(
   "footer-player"
 ) as HTMLImageElement;
 const playBtn = document.getElementById("play") as HTMLImageElement;
-const playIcon = "./../src/images/play-btn.svg";
-const pauseIcon = "./../src/images/pause-btn.svg";
+const playIcon = "../src/images/play-btn.svg";
+const pauseIcon = "../src/images/pause-btn.svg";
 // playBtn.innerHTML = `<i>${playIcon}</i>`;
 const prevBtn = document.getElementById("prev") as HTMLImageElement;
 const nextBtn = document.getElementById("next") as HTMLImageElement;

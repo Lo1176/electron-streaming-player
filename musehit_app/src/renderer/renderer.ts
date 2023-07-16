@@ -33,6 +33,7 @@ type Album = {
   disk?: string
   id?: number;
 }
+
 type Song = {
   id?: number;
   name?: string;
@@ -40,6 +41,7 @@ type Song = {
   position?: number;
   album_id?: number;
 };
+
 // type Artist = {
 //   id?: number;
 //   name?: string;
