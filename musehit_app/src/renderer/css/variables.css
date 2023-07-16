@@ -38,6 +38,6 @@
 
 
   /** default values */
-  --margin-top: var(--xs)
+  --margin-top: var(--l);
   color: var(--white);
 }

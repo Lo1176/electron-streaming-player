@@ -5,8 +5,8 @@
 }
 
 #drag-and-drop-container {
-    width: 50vw;
-    height: 50vw;
+    width: 26vw;
+    height: 26vw;
     border: 1px dashed var(--dark-blue);
 }
 

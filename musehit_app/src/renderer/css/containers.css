@@ -1,7 +1,6 @@
 body {
     /* background-color: #123456; */
     background-color: var(--main-bg-color);
-    margin: var(--margin-top) var(--ms);
 }
 
 .flex-container {
@@ -13,14 +12,15 @@ body {
 }
 
 /** main-container **/
-.main-container {
-    padding-bottom: 56px; /* because of the footer-player height */
+#main-container {
+    margin: 0 var(--ms);
+    padding-bottom: var(--footer-height); /* because of the footer-player height */
 
 }
 
 /** header */
 .header {
-    margin-top: var(--margin-top)
+    padding: var(--l);
 }
 
 /** album-container **/
@@ -51,7 +51,7 @@ body {
     height: 66px;
 }
 .album-content.album-title {
-    color: black;
+    /* color: black; */
     font-weight: bold;
 
     

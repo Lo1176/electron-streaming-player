@@ -4,12 +4,20 @@
   padding: 8px 24px;
   border-radius: 50px;
   font-weight: lighter;
-  opacity: 0.3;
+  opacity: 0.2;
   transition: opacity 0.3s ease;
 }
 
 .btn-ghost:hover {
   opacity: 1;
+}
+
+
+/** admin-section */
+
+.admin-section {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .admin-btn {

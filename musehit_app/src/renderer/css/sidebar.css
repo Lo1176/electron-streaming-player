@@ -1,4 +1,10 @@
+.sidebar {
+   padding-right: var(--l);
+}
+
 .sidebar__logo {
    font-weight: bolder;
-   margin-bottom: 24px;
+   margin-top: var(--margin-top);
+   margin-bottom: var(--margin-top);
+   /* color: var(--white); */
 }
