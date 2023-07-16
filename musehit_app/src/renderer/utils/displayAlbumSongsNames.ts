@@ -60,7 +60,7 @@ function displayAlbumSongsNames() {
     divAllSongs.appendChild(divSong);
   }
 
-  songsList.appendChild(divAllSongs); // add ul to the container.
+  songsList?.appendChild(divAllSongs); // add ul to the container.
   return totalTracks;
 }
 

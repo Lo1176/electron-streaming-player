@@ -1,57 +1,61 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
-  <!-- <link rel="import" href="album.html" /> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"
+    integrity="sha512-YsR46MmyChktsyMMou+Bs74oCa/CDdwft7rJ5wlnmDzMj1mzqncsfJamEEf99Nk7IB0JpTMo5hS8rxB49FUktQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 </head>
+
 <body>
   <div id="main-container">
-     <a href="./index.html">
+    <a href="./../../dist/index.html">
 
-            <h1 class="home-page-navbar__title">MuseHit</h1>
-          </a>
+      <h1 class="home-page-navbar__title">MuseHit</h1>
+    </a>
     <aside>
       <h1>this is the album page</h1>
-      <!-- <a class="btn btn-ghost" href="./index.html">Homepage</a>
-      <h1 onclick="displayAlbumSongsNames()">album page list</h1>
-      <figure>
-        <div id="songs-list" class="container" onload="displaySongs()">
-      </figure>
-      <div class="footer-player player">
+      <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
+
+      <!-- <div class="horizontal-line-separator"></div> -->
+      <!-- repeated code -->
+      <div id="bottom-height"></div>
+      <div id="footer-player" class="player">
         <div class="player-buttons">
-          <img 
-          id="prev"
-          class="prev-img prev-next-btn player-btn pointer disabled"
-          src="./../src/images/previous.svg"
-          alt="previous button">
-
-          <img 
-          id="play"
-          class="play-img player-btn pointer"
-          src="./../src/images/play-btn.svg"
-          alt="play button">
-
-          <img 
-          id="next"
-          class="next-img prev-next-btn player-btn pointer"
-          src="./../src/images/next.svg"
-          alt="next button">
+          <img id="prev" class="prev-img prev-next-btn player-btn pointer" src="./../images/previous.svg"
+            alt="previous button">
+          <img id="play" class="play-img player-btn pointer" src="./../images/play-btn.svg" alt="play button">
+          <img id="next" class="next-img prev-next-btn player-btn pointer" src="./../images/next.svg" alt="next button">
         </div>
 
-          <div id="info">
-          <span id="duration"></span>----------------a beautiful progression bar--------------<span id="timeleft"></span>
+        <div id="info">
+          <div class="player-info player-info-content">
+            <span id="song-name"></span>
+            <span id="player-info-content-separator"></span>
+            <span id="artist-name"></span>
+          </div>
+          <div class="player-info player-info-duration">
+            <span id="duration" class="time">0:00</span>
+            <div id="progress-container" class="progress-container">
+              <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <span id="time-left" class="time">0:00</span>
+          </div>
         </div>
 
+        <audio id="audioPlayer"></audio>
       </div>
-      <audio id="audioPlayer"></audio> -->
+
     </aside>
   </div>
 
-  <script type="text/javascript" src="../dist/renderer.js"></script>
+  <script type="text/javascript" src="./../../dist/renderer.js"></script>
 
 </body>
+
 </html>

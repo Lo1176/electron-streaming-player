@@ -6,7 +6,8 @@
     height: var(--footer-height);
     padding: var(--ml) 0;
     display: flex;
-    background-color: var(--white);
+    background-color: var(--black);
+    opacity: 90%;
 }
 
 .player-buttons {

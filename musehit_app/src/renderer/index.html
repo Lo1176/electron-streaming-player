@@ -1,91 +1,96 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';"> -->
-  <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
-   <script type="text/javascript" src="jsmediatags.min.js"></script>
+  <!-- <script type="text/javascript" src="jsmediatags.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"
+    integrity="sha512-YsR46MmyChktsyMMou+Bs74oCa/CDdwft7rJ5wlnmDzMj1mzqncsfJamEEf99Nk7IB0JpTMo5hS8rxB49FUktQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
+
 <body>
   <div id="main-container">
-    <aside>
-      <div class="home-page">
-        <div class="home-page-navbar">
-          <div>
-            <a href="./index.html">
-              <h1 class="home-page-navbar__title">MuseHit</h1>
-            </a>
-            <!-- how to load an other page ? -->
-            <!-- <a href="album.html" target="my-iframe">Click me</a>
-              <iframe name="my-iframe" src="album.html"></iframe> -->
-              <a href="./../src/renderer/admin.html">
+    <!-- <div class="home-container"> -->
+    <div class="horizontal-line-separator"></div>
 
-              <button class="btn-ghost admin-btn">Admin Section</button>
-              </a>
-          </div>
-            <!-- <button id="admin-btn" onclick="window.location.href='./../../src/renderer/admin.html'" class="btn-ghost">Admin mode</button>
-            <a href='./../../src/renderer/admin.html'>toto click here</a> -->
+    <div class="flex-container">
+      <div class="home-page sidebar vertical-line-separator">
+        <div class="logo">
 
-          <div class="search-wrapper">
-            <label for="search">Rechercher</label>
-            <input type="search" id="search" data-search>
+          <a href="./index.html">
+            <h1 class="sidebar__logo">MuseHit</h1>
+          </a>
+        </div>
+        <!-- <div class="horizontal-line-separator"></div> -->
+        <div class="search-wrapper">
+          <label for="search">Recherche</label>
+          <input type="search" id="search" data-search>
+        </div>
+        <div class="horizontal-line-separator"></div>
 
-          </div>  
-            <div id="albums-container" class="albums-container" data-album-cards-container>All Albums</div>
-          </div>
-          <div class="line-separator"></div>
-        </div>
-        
-        <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
-        
-        <!-- <div class="line-separator"></div> -->
-      <div id="bottom-height"></div>
-      <div id="footer-player" class="player">
-        <div class="player-buttons">
-          <img 
-          id="prev"
-          class="prev-img prev-next-btn player-btn pointer"
-          src="./../src/images/previous.svg"
-          alt="previous button">
-          <img 
-          id="play"
-          class="play-img player-btn pointer"
-          src="./../src/images/play-btn.svg"
-          alt="play button">
-          <img 
-          id="next"
-          class="next-img prev-next-btn player-btn pointer"
-          src="./../src/images/next.svg"
-          alt="next button">
-        </div>
-        
-        <div id="info">
-          <div class="player-info player-info-content">
-            <span id="song-name"></span>
-            <span id="player-info-content-separator"></span>
-            <span id="artist-name"></span>
-          </div>
-          <div class="player-info player-info-duration">
-            <span id="duration" class="time">0:00</span>
-            <div id="progress-container" class="progress-container">
-              <div id="progress-bar" class="progress-bar"></div>
-            </div>
-            <span id="time-left" class="time">0:00</span>
-          </div>
-        </div>
-        
-        <audio id="audioPlayer"></audio>
       </div>
-    </aside>
-    </div>
-    
-   
-    <script type="text/javascript" src="../dist/renderer.js">
+      <div class="full-container">
 
-    </script>
+        <div class="header">
+
+          <div class="admin-section">
+            <a href="./../src/renderer/admin.html">
+              <button class="btn-ghost admin-btn">Admin Section</button>
+            </a>
+          </div>
+        </div>
+
+        <!-- <div class="horizontal-line-separator"></div> -->
+        <div id="albums-container" class="albums-container" data-album-cards-container>All Albums</div>
+        <div class="horizontal-line-separator"></div>
+      </div>
+    </div>
+    <!-- repeated code -->
+    <div id="bottom-height"></div>
+    <div id="footer-player" class="player">
+      <div class="player-buttons">
+        <img id="prev" class="prev-img prev-next-btn player-btn pointer" src="./../src/images/previous.svg"
+          alt="previous button">
+        <img id="play" class="play-img player-btn pointer" src="./../src/images/play-btn.svg" alt="play button">
+        <img id="next" class="next-img prev-next-btn player-btn pointer" src="./../src/images/next.svg"
+          alt="next button">
+      </div>
+
+      <div id="info">
+        <div class="player-info player-info-content">
+          <span id="song-name"></span>
+          <span id="player-info-content-separator"></span>
+          <span id="artist-name"></span>
+        </div>
+        <div class="player-info player-info-duration">
+          <span id="duration" class="time">0:00</span>
+          <div id="progress-container" class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <span id="time-left" class="time">0:00</span>
+        </div>
+      </div>
+
+      <audio id="audioPlayer"></audio>
+    </div>
+
+  </div>
+
+
+
+
+
+  <script type="text/javascript" src="./renderer.js">
+
+  </script>
 
 </body>
+
 </html>

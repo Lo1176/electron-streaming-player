@@ -1,21 +1,28 @@
 body {
     /* background-color: #123456; */
     background-color: var(--main-bg-color);
-    margin: 8px;
+    margin: var(--margin-top) var(--ms);
 }
 
-.home-page-navbar {
-    margin-bottom: 24px;
+.flex-container {
+    display:flex;
 }
-.home-page-navbar__title {
-   font-weight: bolder;
-   margin-bottom: 24px;
+
+.full-container {
+    width: 100%;
 }
+
 /** main-container **/
 .main-container {
     padding-bottom: 56px; /* because of the footer-player height */
 
 }
+
+/** header */
+.header {
+    margin-top: var(--margin-top)
+}
+
 /** album-container **/
 .albums-container {
     display: flex;
@@ -24,8 +31,12 @@ body {
     gap: 24px;
     margin: 24px;   
 }
-.line-separator {
-    border-bottom: 1px solid black;  /* to see where am i  */
+.horizontal-line-separator {
+    border-bottom: 1px solid var(--white); 
+}
+
+.vertical-line-separator {
+    border-right: 1px solid var(--white);  
 }
 
 .album-content {

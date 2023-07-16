@@ -1,10 +1,10 @@
 .btn-ghost {
-  color: #4A4A4A;
-  border: 1px solid var(--blue);
+  color: var(--black);
+  border: 1px solid var(--oxford-blue);
   padding: 8px 24px;
   border-radius: 50px;
   font-weight: lighter;
-  opacity: 0.6;
+  opacity: 0.3;
   transition: opacity 0.3s ease;
 }
 
@@ -12,11 +12,7 @@
   opacity: 1;
 }
 
-.player-btn:hover {
-  background-color: aqua;
-}
-
 .admin-btn {
-  display: flex;
+  /* display: flex; */
   float: right;
 }

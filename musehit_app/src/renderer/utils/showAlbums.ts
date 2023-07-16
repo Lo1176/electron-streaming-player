@@ -17,9 +17,10 @@ import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
     const albumCard = document.createElement("div");
     const cover = albums[i].cover !== "NULL" ? albums[i].cover : defaultCover;
     // <a id='album_${albums[i]}' href="./../src/renderer/album.html">
+    // <a id='album_${albums[i]}' href="#songs-list">
     albumCard.innerHTML = `
-    <a id='album_${albums[i]}' href="#songs-list">
-      <div class="album-card">
+    <a id='album_${albums[i]}' href="./../src/renderer/album.html">
+    <div class="album-card">
         <img class="album-cover" src="./../public/uploads/${cover}" alt="album cover">
       <div class="album-content">
         <h4 class="album-name">${albums[i].name}</h4>
@@ -27,12 +28,12 @@ import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
       </div>
     </a>
     `;
-    albumCard.addEventListener("click", () => {
-      (currentAlbum = albums[i]),
-        (currentArtist = artistInfo),
-        displayAlbumSongsNames();
-      localStorage.album = currentAlbum;
-    });
+    // albumCard.addEventListener("click", () => {
+    //   (currentAlbum = albums[i]),
+    //     (currentArtist = artistInfo),
+    //     displayAlbumSongsNames();
+    //   localStorage.album = currentAlbum;
+    // });
     albumContainer?.appendChild(albumCard);
   }
 }
