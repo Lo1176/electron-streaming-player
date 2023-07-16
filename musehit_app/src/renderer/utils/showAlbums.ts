@@ -28,12 +28,12 @@ import { displayAlbumSongsNames } from "./displayAlbumSongsNames";
       </div>
     </a>
     `;
-    // albumCard.addEventListener("click", () => {
-    //   (currentAlbum = albums[i]),
-    //     (currentArtist = artistInfo),
-    //     displayAlbumSongsNames();
-    //   localStorage.album = currentAlbum;
-    // });
+    albumCard.addEventListener("click", () => {
+      (currentAlbum = albums[i]),
+        (currentArtist = artistInfo),
+        displayAlbumSongsNames();
+      localStorage.album = currentAlbum;
+    });
     albumContainer?.appendChild(albumCard);
   }
 }
