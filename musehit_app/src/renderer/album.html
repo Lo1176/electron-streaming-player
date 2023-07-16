@@ -7,51 +7,73 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
   <link rel="stylesheet" href="css/index.css">
   <title>MuseHit</title>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"
-    integrity="sha512-YsR46MmyChktsyMMou+Bs74oCa/CDdwft7rJ5wlnmDzMj1mzqncsfJamEEf99Nk7IB0JpTMo5hS8rxB49FUktQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 </head>
 
 <body>
   <div id="main-container">
-    <a href="./../../dist/index.html">
 
-      <h1 class="home-page-navbar__title">MuseHit</h1>
-    </a>
-    <aside>
-      <h1>this is the album page</h1>
-      <div id="songs-list" class="container" onload="displaySongs()">songs-list</div>
-
-      <!-- <div class="horizontal-line-separator"></div> -->
-      <!-- repeated code -->
-      <div id="bottom-height"></div>
-      <div id="footer-player" class="player">
-        <div class="player-buttons">
-          <img id="prev" class="prev-img prev-next-btn player-btn pointer" src="./../images/previous.svg"
-            alt="previous button">
-          <img id="play" class="play-img player-btn pointer" src="./../images/play-btn.svg" alt="play button">
-          <img id="next" class="next-img prev-next-btn player-btn pointer" src="./../images/next.svg" alt="next button">
+    <div class="flex-container">
+      <div class="home-page sidebar">
+        <div class="logo">
+          <a href="../../dist/index.html">
+            <h1 class="sidebar__logo">MuseHit</h1>
+          </a>
         </div>
-
-        <div id="info">
-          <div class="player-info player-info-content">
-            <span id="song-name"></span>
-            <span id="player-info-content-separator"></span>
-            <span id="artist-name"></span>
-          </div>
-          <div class="player-info player-info-duration">
-            <span id="duration" class="time">0:00</span>
-            <div id="progress-container" class="progress-container">
-              <div id="progress-bar" class="progress-bar"></div>
-            </div>
-            <span id="time-left" class="time">0:00</span>
-          </div>
+        <div class="search-wrapper">
+          <label for="search">Recherche</label>
+          <input type="search" id="search" data-search>
         </div>
-
-        <audio id="audioPlayer"></audio>
       </div>
+      <div class="full-container">
 
-    </aside>
+        <div class="header">
+
+          <div class="admin-section">
+            <a href="../src/renderer/admin.html">
+              <button class="btn-ghost admin-btn">Admin Section</button>
+            </a>
+          </div>
+        </div>
+        <aside>
+          <h1>this is the album page</h1>
+          <div id="songs-list" class="container">Titres</div>
+          <!-- <div id="songs-list" class="container" onload="displaySongs()">songs-list</div> -->
+
+          <!-- <div class="horizontal-line-separator"></div> -->
+          <!-- repeated code -->
+          <div id="bottom-height"></div>
+          <div id="footer-player" class="player">
+            <div class="player-buttons">
+              <img id="prev" class="prev-img prev-next-btn player-btn pointer" src="../images/previous.svg"
+                alt="previous button">
+              <img id="play" class="play-img player-btn pointer" src="../images/play-btn.svg" alt="play button">
+              <img id="next" class="next-img prev-next-btn player-btn pointer" src="../images/next.svg"
+                alt="next button">
+            </div>
+
+            <div id="info">
+              <div class="player-info player-info-content">
+                <span id="song-name"></span>
+                <span id="player-info-content-separator"></span>
+                <span id="artist-name"></span>
+              </div>
+              <div class="player-info player-info-duration">
+                <span id="duration" class="time">0:00</span>
+                <div id="progress-container" class="progress-container">
+                  <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <span id="time-left" class="time">0:00</span>
+              </div>
+            </div>
+
+            <audio id="audioPlayer"></audio>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+
+
   </div>
 
   <script type="text/javascript" src="./../../dist/renderer.js"></script>
