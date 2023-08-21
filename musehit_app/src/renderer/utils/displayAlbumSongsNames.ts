@@ -1,5 +1,9 @@
 import { Album, Song } from "./../renderer";
-import { currentArtist, currentAlbum } from "./showAlbums";
+// import { currentArtist, currentAlbum } from "./showAlbums";
+const currentAlbum = localStorage.getItem('currentAlbum');
+
+console.log("🚀 ~ file: displayAlbumSongsNames.ts:3 ~ currentAlbum:", currentAlbum)
+// if (!!currentArtist) console.log("🚀 ~ file: displayAlbumSongsNames.ts:3 ~ currentArtist:", currentArtist)
 
 /** function to display songs of an album */
 let allSongsFromCurrentAlbum: Song = undefined;
@@ -59,7 +63,7 @@ function displayAlbumSongsNames(album: Album) {
   return totalTracks;
 }
 
-if (songsList) songsList.onload = function() {displayAlbumSongsNames(currentAlbum)};
+if (!!songsList) songsList.onload = function() {displayAlbumSongsNames(currentAlbum)};
 
 /**
  * Footer player
@@ -67,7 +71,7 @@ if (songsList) songsList.onload = function() {displayAlbumSongsNames(currentAlbu
 const footerPlayer = document.getElementById(
   "footer-player"
 ) as HTMLImageElement;
-const playBtn = document.getElementById("play") as HTMLImageElement;
+const playBtn = document.getElementById("play")? document.getElementById("play") as HTMLImageElement : null;
 const playIcon = "../src/images/play-btn.svg";
 const pauseIcon = "../src/images/pause-btn.svg";
 // playBtn.innerHTML = `<i>${playIcon}</i>`;
@@ -89,12 +93,14 @@ if (!!document.getElementById("audioPlayer")) {
   var audioPlayer = <HTMLVideoElement>document.getElementById("audioPlayer");
 }
 
-playBtn.addEventListener("click", () => {
-  // is the song  playing ?
-  const isPlaying = footerPlayer.classList.contains("play");
-
-  isPlaying ? pauseSong() : playSong();
-});
+if (!!playBtn) {
+  playBtn.addEventListener("click", () => {
+    // is the song  playing ?
+    const isPlaying = footerPlayer.classList.contains("play");
+    
+    isPlaying ? pauseSong() : playSong();
+  });
+}
 
 function playSong() {
   footerPlayer.classList.remove("pause"),
@@ -133,52 +139,62 @@ const playThisSong = () => {
   artistName.innerText = currentArtist.name;
 };
 
-nextBtn.addEventListener("click", () => {
-  nextSong();
-});
-prevBtn.addEventListener("click", () => {
-  prevSong();
-});
+if (!!nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    nextSong();
+  });
+}
+
+if (!!nextBtn) {
+  prevBtn.addEventListener("click", () => {
+    prevSong();
+  });
+}
 
 // Count down => time left
-audioPlayer.addEventListener(
-  "timeupdate",
+if (!!audioPlayer) {
+
+  audioPlayer.addEventListener(
+    "timeupdate",
   function () {
     var timeLeftElement = document.getElementById("time-left"),
-      songDuration = audioPlayer.duration,
-      currentTime = audioPlayer.currentTime,
-      timeLeft = songDuration - currentTime,
-      s: string | number,
-      m: string | number;
-
+    songDuration = audioPlayer.duration,
+    currentTime = audioPlayer.currentTime,
+    timeLeft = songDuration - currentTime,
+    s: string | number,
+    m: string | number;
+    
     s = Math.floor(timeLeft) % 60;
     m = Math.floor(timeLeft / 60) % 60;
-
+    
     s = s < 10 ? "0" + s : s;
     m = m < 10 ? "0" + m : m;
-
+    
     timeLeftElement.innerHTML = m + ":" + s;
   },
   false
-);
+  );
+}
 
 // Count up => duration
-audioPlayer.addEventListener(
-  "timeupdate",
-  function () {
-    var timeLineElement = document.getElementById("duration");
-    var s = Math.floor(audioPlayer.currentTime % 60);
-    var m = Math.floor((audioPlayer.currentTime / 60) % 60);
-    if (s < 10) {
-      timeLineElement.innerHTML = m + ":0" + s;
-    } else {
-      timeLineElement.innerHTML = m + ":" + s;
-    }
-    updateProgressBar(audioPlayer.currentTime, audioPlayer.duration);
-  },
-  false
-);
-
+if (!!audioPlayer) {
+  audioPlayer.addEventListener(
+    "timeupdate",
+    function () {
+      var timeLineElement = document.getElementById("duration");
+      var s = Math.floor(audioPlayer.currentTime % 60);
+      var m = Math.floor((audioPlayer.currentTime / 60) % 60);
+      if (s < 10) {
+        timeLineElement.innerHTML = m + ":0" + s;
+      } else {
+        timeLineElement.innerHTML = m + ":" + s;
+      }
+      updateProgressBar(audioPlayer.currentTime, audioPlayer.duration);
+    },
+    false
+    );
+  }
+    
 // Next song
 function nextSong() {
   let position = (currentSong.position += 1);
@@ -219,17 +235,20 @@ function updateProgressBar(currentTime: number, songDuration: number) {
   progressBar.style.width = `${progressPercent}%`;
 }
 
-progressContainer.addEventListener("click", playHere);
-// if we click on the progress bar we can it must change the currentTime
-function playHere(e: { offsetX: any }) {
-  const width = this.clientWidth;
-  const clickX = e.offsetX;
-  const duration = audioPlayer.duration;
+if (!!progressContainer) {
 
-  audioPlayer.currentTime = (clickX / width) * duration;
+  progressContainer.addEventListener("click", playHere);
+  // if we click on the progress bar we can it must change the currentTime
+  function playHere(e: { offsetX: any }) {
+    const width = this.clientWidth;
+    const clickX = e.offsetX;
+    const duration = audioPlayer.duration;
+    
+    audioPlayer.currentTime = (clickX / width) * duration;
+  }
 }
-
-audioPlayer.addEventListener("ended", nextSong);
+  
+if (!!audioPlayer) audioPlayer.addEventListener("ended", nextSong);
 
 export { playThisSong };
 
