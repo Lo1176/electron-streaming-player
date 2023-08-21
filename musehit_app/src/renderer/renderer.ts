@@ -42,14 +42,14 @@ type Song = {
   album_id?: number;
 };
 
-// type Artist = {
-//   id?: number;
-//   name?: string;
-// }
+type Artist = {
+  id?: number;
+  name?: string;
+}
 /** TYPES DB end */
 
 let albums: Album = versions.findAlbumsOrderedByArtist();
 showAllAlbums(albums); 
 searchBarFunction(albums);
 
-export { Album, Song };
+export { Album, Song, Artist };
