@@ -1,23 +1,3 @@
-
-import searchBarFunction from "./utils/searchBarFunction";
-import { showAllAlbums } from "./utils/showAlbums";
-
-/******* PLAYER INFOS *********/
-// if (!!audioPlayer) {
-//   var PLAYER = console.log(
-//     "🚀 ~ PLAYER_INFO ~ ",
-//     "audioPlayer.paused:",
-//     audioPlayer.paused,
-//     "audioPlayer.currentTime:",
-//     audioPlayer.currentTime,
-//     "audioPlayer.ended:",
-//     audioPlayer.ended,
-//     "audioPlayer.readyState:",
-//     audioPlayer.readyState
-//   );
-// }
-/** end */
-
 /*******
  *  
  * TYPES tables from DB
@@ -49,7 +29,5 @@ type Artist = {
 /** TYPES DB end */
 
 let albums: Album = versions.findAlbumsOrderedByArtist();
-showAllAlbums(albums); 
-searchBarFunction(albums);
 
-export { Album, Song, Artist };
+export { Album, Song, Artist, albums };
