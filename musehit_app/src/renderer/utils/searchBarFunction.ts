@@ -1,7 +1,7 @@
 /********* Search Bar Function  ************/
 
-import { Album } from "../renderer";
-import { showAllAlbums } from "./showAlbums";
+import { Album, albums } from "../renderer";
+import { showAllAlbums } from "./showAllAlbums";
 
 const searchBarFunction = (albums: Album) => {
     const searchInput = document.querySelector(
@@ -18,11 +18,9 @@ const searchBarFunction = (albums: Album) => {
         let dataFromSearchByArtists: Array<string>,
           dataFromSearchByReleaseDate: Array<string>,
           dataFromSearchByAlbums: Array<string> = [];
-     
-
-        
+  
         if (value.length >= 2) {
-            let result = []
+            let result: any = []
             dataFromSearchByArtists = versions.searchByArtists(value);
             dataFromSearchByAlbums = versions.searchByAlbums(value);
             dataFromSearchByReleaseDate = versions.searchByReleaseDate(value);
@@ -33,12 +31,11 @@ const searchBarFunction = (albums: Album) => {
                 ...dataFromSearchByReleaseDate,
               ]),
             ];
-            
             showAllAlbums(result);
         } else {
           showAllAlbums(albums)
         }
     });
 }
-
+searchBarFunction(albums)
 export default searchBarFunction;
