@@ -1,44 +1,61 @@
-import { Album, Song } from "./../renderer";
-// import { currentArtist, currentAlbum } from "./showAlbums";
-const currentAlbum = localStorage.getItem('currentAlbum');
+/**
+ *  function to display songs of an album
+ */
 
-console.log("🚀 ~ file: displayAlbumSongsNames.ts:3 ~ currentAlbum:", currentAlbum)
-// if (!!currentArtist) console.log("🚀 ~ file: displayAlbumSongsNames.ts:3 ~ currentArtist:", currentArtist)
+import { Album, Artist, Song } from "./../renderer";
+import { defaultCover } from "./showAllAlbums";
+// import { currentArtist, currentAlbum } from "./showAllAlbums";
+const currentAlbum: Album = JSON.parse(localStorage.getItem('currentAlbum'));
+const currentArtist: Artist = JSON.parse(localStorage.getItem('currentArtist'));
 
-/** function to display songs of an album */
 let allSongsFromCurrentAlbum: Song = undefined;
 let totalTracks = undefined;
- let currentSong: {
-   album_id: string;
-   name: string;
-   path: string;
-   position: number;
- };
-const songsList = document.getElementById("songs-list");
+let currentSong: {
+  album_id: string;
+  name: string;
+  path: string;
+  position: number;
+};
 
+const songsList = document.getElementById("songs-list");
+const displayAlbum = document.getElementById("selected-album-container")
+// display selected album
+const albumCard = document.createElement("div") ? document.createElement("div") : null;
+const cover = currentAlbum.cover !== "NULL" ? currentAlbum.cover : defaultCover;
+// <a id='album_${currentAlbum}' href="#songs-list">
+if (!!albumCard) {
+  albumCard.innerHTML = `
+  <div class="album-page-card">
+  <img class="album-cover" src="./../../public/uploads/${cover}" alt="album cover">
+  <div class="album-page-content">
+  <h2 class="album-name">${currentAlbum.name}</h2>
+  <p class="album-artiste-name">${currentArtist.name}</p>
+  <p>${versions.findAllSongsByAlbumID(currentAlbum.id).length} titres - durée total ..h..mn - </p>
+  </div>
+  </a>
+  `;}
+  displayAlbum?.appendChild(albumCard);
+function displayTotalAlbumTime() {}
 function displayAlbumSongsNames(album: Album) {
   // 1. show selected album title + ... ${album.cover} .release_date .name .artist_id ...
-  allSongsFromCurrentAlbum = versions.findAllSongsByAlbumID(album.id);
+  allSongsFromCurrentAlbum = !!album ? versions.findAllSongsByAlbumID(album.id) : null;
   totalTracks = allSongsFromCurrentAlbum.length;
   
-  if (!!songsList) songsList.innerHTML = "";
+  // if (!!songsList) songsList.innerHTML = "";
   const divAllSongs = document.createElement("div");
   // divAllSongs.setAttribute("id", "theSongList"); // maybe add a class but not an id
   
   // list all allSongsFromCurrentAlbum
-  // console.log("🚀 ~ file: displayAlbumSongsNames.ts:16 ~ displayAlbumSongsNames ~ album:", album)
   for (let i = 0; i < allSongsFromCurrentAlbum.length; i++) {
     const divSong = document.createElement("div");
     divSong.setAttribute("class", "song-info");
     divSong.innerHTML = `
       <div class="content-overlay"></div>
       <div>
-      <img class="album-cover album-cover-thumb" src='../../public/uploads/${album.cover}' alt="album cover">
+        <img class="album-cover album-cover-thumb" src='./../../public/uploads/${album.cover}' alt="album cover">
       </div>
       <div>
-      <div class="toto">
-      <img id='btn-over' class='toto' src="../images/play-btn.svg" alt="play button"/>
-      </div>
+        <img id='btn-over' class='toto' src="../images/play-btn.svg" alt="play button"/>
       </div>
       <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
       `
@@ -47,7 +64,6 @@ function displayAlbumSongsNames(album: Album) {
     
     divSong.addEventListener("click", () => {
       currentSong = allSongsFromCurrentAlbum[i];
-      console.log("🚀 ~ file: displayAlbumSongsNames.ts:47 ~ divSong.addEventListener ~ currentSong:", currentSong)
       playThisSong();
     });
 
@@ -63,7 +79,7 @@ function displayAlbumSongsNames(album: Album) {
   return totalTracks;
 }
 
-if (!!songsList) songsList.onload = function() {displayAlbumSongsNames(currentAlbum)};
+if (!!songsList) displayAlbumSongsNames(currentAlbum);
 
 /**
  * Footer player
@@ -72,8 +88,8 @@ const footerPlayer = document.getElementById(
   "footer-player"
 ) as HTMLImageElement;
 const playBtn = document.getElementById("play")? document.getElementById("play") as HTMLImageElement : null;
-const playIcon = "../src/images/play-btn.svg";
-const pauseIcon = "../src/images/pause-btn.svg";
+const playIcon = "./../../src/images/play-btn.svg";
+const pauseIcon = "./../../src/images/pause-btn.svg";
 // playBtn.innerHTML = `<i>${playIcon}</i>`;
 const prevBtn = document.getElementById("prev") as HTMLImageElement;
 const nextBtn = document.getElementById("next") as HTMLImageElement;
@@ -119,7 +135,7 @@ function pauseSong() {
 /*********** functions for player **************/
 // play a song
 const playThisSong = () => {
-  audioPlayer.src = `./../public/uploads/${currentSong.path}`;
+  audioPlayer.src = `./../../public/uploads/${currentSong.path}`;
   playSong();
   if (currentSong.position === 1) {
     prevBtn.classList.add("disabled");
@@ -181,9 +197,9 @@ if (!!audioPlayer) {
   audioPlayer.addEventListener(
     "timeupdate",
     function () {
-      var timeLineElement = document.getElementById("duration");
-      var s = Math.floor(audioPlayer.currentTime % 60);
-      var m = Math.floor((audioPlayer.currentTime / 60) % 60);
+      const timeLineElement = document.getElementById("duration");
+      const s = Math.floor(audioPlayer.currentTime % 60);
+      const m = Math.floor((audioPlayer.currentTime / 60) % 60);
       if (s < 10) {
         timeLineElement.innerHTML = m + ":0" + s;
       } else {
