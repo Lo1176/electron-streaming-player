@@ -66,7 +66,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAllAlbumsByArtistId: (id: string) => {
     // beware: use simple quote and not double quote
     const album = db
-      .prepare(`SELECT * FROM  albums WHERE artist_id = '${id}'`)
+      .prepare(`SELECT * FROM albums WHERE artist_id = '${id}'`)
       .all();
     return album;
   },
@@ -74,7 +74,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAlbumByArtistIdAndAlbumName: (artist_id: number, album_name: string) => {
     const album = db
       .prepare(
-        `SELECT * FROM  albums WHERE LOWER("name") = '${album_name}' AND artist_id = ${artist_id}`
+        `SELECT * FROM albums WHERE LOWER("name") = '${album_name}' AND artist_id = ${artist_id}`
       )
       .all();
     return album[0];

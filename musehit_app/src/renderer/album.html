@@ -19,35 +19,35 @@
             <h1 class="sidebar__logo">MuseHit</h1>
           </a>
         </div>
-        <div class="search-wrapper">
+        <!-- <div class="search-wrapper">
           <label for="search">Recherche</label>
           <input type="search" id="search" data-search>
-        </div>
+        </div> -->
       </div>
       <div class="full-container">
 
         <div class="header">
 
           <div class="admin-section">
-            <a href="../src/renderer/admin.html">
+            <a href="./../../src/renderer/admin.html">
               <button class="btn-ghost admin-btn">Admin Section</button>
             </a>
           </div>
         </div>
         <aside>
-          <h1>this is the album page</h1>
+
+          <div id="selected-album-container" class="album-container" data-album-cards-container></div>
           <div id="songs-list" class="container">Titres</div>
-          <!-- <div id="songs-list" class="container" onload="displaySongs()">songs-list</div> -->
 
           <!-- <div class="horizontal-line-separator"></div> -->
           <!-- repeated code -->
           <div id="bottom-height"></div>
           <div id="footer-player" class="player">
             <div class="player-buttons">
-              <img id="prev" class="prev-img prev-next-btn player-btn pointer" src="../images/previous.svg"
+              <img id="prev" class="prev-img prev-next-btn player-btn pointer" src="./../images/previous.svg"
                 alt="previous button">
-              <img id="play" class="play-img player-btn pointer" src="../images/play-btn.svg" alt="play button">
-              <img id="next" class="next-img prev-next-btn player-btn pointer" src="../images/next.svg"
+              <img id="play" class="play-img player-btn pointer" src="./../images/play-btn.svg" alt="play button">
+              <img id="next" class="next-img prev-next-btn player-btn pointer" src="./../images/next.svg"
                 alt="next button">
             </div>
 
@@ -77,6 +77,9 @@
   </div>
 
   <script type="text/javascript" src="./../../dist/renderer.js"></script>
+  <script src="./../../dist/utils/displayAlbumSongsNames.js" async></script>
+
+  <!-- <script src="./renderer.js" async></script> -->
 
 </body>
 
