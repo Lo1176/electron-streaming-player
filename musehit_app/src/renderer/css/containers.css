@@ -39,20 +39,3 @@ body {
     border-right: 1px solid var(--white);  
 }
 
-.album-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 8px;
-
-    width: 164px;
-    height: 66px;
-}
-.album-content.album-title {
-    /* color: black; */
-    font-weight: bold;
-
-    
-}
