@@ -5,8 +5,12 @@ const createSong = (
   album_id: number,
   position: number
     ) => {
-      console.log(!!versions.findSongByAlbumIdAndSongName(album_id, name) ? `la chanson ${name} existe déjà dans la db` : `nous allons ajouter la chanson ${name} dans la db`);
-  !!!versions.findSongByAlbumIdAndSongName(album_id, name) && versions.addSong(name, path, album_id, position);
+      if (!!versions.findSongByAlbumIdAndSongName(album_id, name)) {
+        console.log(`la chanson ${name} existe déjà dans la db`)
+      } else {
+        versions.addSong(name, path, album_id, position)
+        console.log(`nous avons ajouté la chanson ${name} dans la db`)
+      }
 };
 
 export default createSong
