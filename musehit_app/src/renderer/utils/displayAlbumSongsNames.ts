@@ -30,7 +30,7 @@ if (!!albumCard) {
   <div class="album-page-content">
   <h2 class="album-name">${currentAlbum.name}</h2>
   <p class="album-artiste-name">${currentArtist.name}</p>
-  <p>${versions.findAllSongsByAlbumID(currentAlbum.id).length} titres - durée total ..h..mn - </p>
+  <p>${versions.findAllSongsByAlbumID(currentAlbum.id).length} titres</p>
   </div>
   </a>
   `;}
