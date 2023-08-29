@@ -42,7 +42,9 @@ function displayAlbumSongsNames(album: Album) {
   totalTracks = allSongsFromCurrentAlbum.length;
   
   // if (!!songsList) songsList.innerHTML = "";
-  const divAllSongs = document.createElement("div");
+  const divAllSongs = document.createElement("div")
+  divAllSongs.classList.add("display-all-songs")
+  
   // divAllSongs.setAttribute("id", "theSongList"); // maybe add a class but not an id
   
   // list all allSongsFromCurrentAlbum
@@ -53,9 +55,6 @@ function displayAlbumSongsNames(album: Album) {
       <div class="content-overlay"></div>
       <div>
         <img class="album-cover album-cover-thumb" src='./../../public/uploads/${album.cover}' alt="album cover">
-      </div>
-      <div>
-        <img id='btn-over' class='toto' src="../images/play-btn.svg" alt="play button"/>
       </div>
       <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
       `

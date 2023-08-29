@@ -5,6 +5,10 @@
     width: 240px;
 }
 
+.input-search-bar:focus-visible {
+    outline-color: var(--navy-blue);
+}
+
 .hide {
     display: none;
 }

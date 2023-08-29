@@ -87,7 +87,6 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
         `SELECT * FROM songs WHERE album_id = ${id} ORDER BY position ASC;`
       )
       .all();
-    console.log("songs", songs);
     return songs;
   },
 

@@ -1,8 +1,8 @@
 :root {
   /* --main-bg-color: #FAFBFE; */
-  --main-bg-color: var(--black);
+  --main-bg-color: var(--white);
   /* --main-bg-color: black; */
-  --white: #fff;
+  --white: #fefefe;
   /* CSS rgb */
   --dark-blue: rgb(10, 79, 122);
   --blue: rgb(11, 105, 177);
@@ -15,6 +15,8 @@
   --oxford-blue: rgba(4, 5, 46, 1);
   --federal-blue: rgba(20, 1, 82, 1);
   --navy-blue: rgba(34, 0, 124, 1);
+
+  --line-separator: #f0f0f0;
   
   /* SCSS Gradient */
   --gradient-top: linear-gradient(0deg, #02010aff, #04052eff, #140152ff, #22007cff);
@@ -39,5 +41,5 @@
 
   /** default values */
   --margin-top: var(--l);
-  color: var(--white);
+  color: var(--black);
 }

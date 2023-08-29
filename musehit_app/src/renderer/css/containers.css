@@ -32,10 +32,10 @@ body {
     margin: 24px;   
 }
 .horizontal-line-separator {
-    border-bottom: 1px solid var(--white); 
+    border-bottom: 1px solid var(--line-separator); 
 }
 
 .vertical-line-separator {
-    border-right: 1px solid var(--white);  
+    border-right: 1px solid var(--line-separator);  
 }
 

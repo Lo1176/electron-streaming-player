@@ -49,28 +49,26 @@
 
 
 /* #songs-list */
+.display-all-songs {
+    margin-top: var(--ms);
+}
+
 .song-info {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px;
+    gap: var(--m);
+    padding: var(--ms);
 }
 
 .song-info:hover {
     /* background-color: rgba(var(--light-blue),0.4); */
     background: #e2f5ff;
+    background: #e2f5ff54;
+    border-radius: 8px;
+
 }
 .song-info:hover img {
-    /* background-color: rgba(var(--light-blue),0.4); */
-    /* content: '';
-    background-color: #fff; */
     border-radius: 50%;
-    /* position: absolute;
-    bottom: 100%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    transform: translate(-50%, 50%); */
     -webkit-transition: all 0.1s ease-in-out 0s;
     -moz-transition: all 0.1s ease-in-out 0s;
     transition: all 0.1s ease-in-out 0s;
@@ -80,23 +78,3 @@
     width: 40px;
 }
 
-/* .song-info .content-overlay {
-  background: rgba(0,0,0,0.7);
-  position: absolute;
-  height: 99%;
-  width: 100%;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  opacity: 0;
-  -webkit-transition: all 0.4s ease-in-out 0s;
-  -moz-transition: all 0.4s ease-in-out 0s;
-  transition: all 0.4s ease-in-out 0s;
-}
-
-.song-info:hover .content-overlay{
-    opacity: 1;
-
-   
-} */
