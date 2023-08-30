@@ -1,18 +1,13 @@
-/*******
- *  
- * TYPES tables from DB
- * 
- *  *********/
-
+/******* TYPES tables from DB  *********/
 type Album = {
   name?: string;
   artist_id?: number;
   cover?: string;
   release_date?: string;
   genre?: string;
-  disk?: string
+  disk?: string;
   id?: number;
-}
+};
 
 type Song = {
   id?: number;
@@ -25,9 +20,7 @@ type Song = {
 type Artist = {
   id?: number;
   name?: string;
-}
+};
 /** TYPES DB end */
 
-let albums: Album = versions.findAlbumsOrderedByArtist();
-
-export { Album, Song, Artist, albums };
+export { Album, Song, Artist };

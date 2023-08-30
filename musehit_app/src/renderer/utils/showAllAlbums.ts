@@ -1,23 +1,24 @@
-/** 
+/**
  * function to display all albums
  */
 
-import { Album, albums } from "../renderer";
-
+import { Album } from "../renderer";
 
 let albumContainer = document.getElementById("albums-container");
 let defaultCover = "default-cover.png";
+let allAlbums: Album = versions.findAlbumsOrderedByArtist();
 
 async function showAllAlbums(albums: Album) {
-
   if (!!albumContainer) {
-    albumContainer.innerHTML = ""
+    albumContainer.innerHTML = "";
     for (let i = 0; i < albums.length; i++) {
       const artistInfo = await versions.findArtistById(albums[i].artist_id);
-      const albumCard = document.createElement("div") ? document.createElement("div") : null;
+      const albumCard = document.createElement("div")
+        ? document.createElement("div")
+        : null;
       const cover = albums[i].cover !== "NULL" ? albums[i].cover : defaultCover;
-      
-      if (!!albumCard) {        
+
+      if (!!albumCard) {
         albumCard.innerHTML = `
         <div class="album-card">
         <a id='album_${albums[i]}' href="../src/renderer/album.html">
@@ -30,8 +31,8 @@ async function showAllAlbums(albums: Album) {
         `;
 
         albumCard.addEventListener("click", () => {
-          localStorage.setItem('currentAlbum', JSON.stringify(albums[i]));
-          localStorage.setItem('currentArtist', JSON.stringify(artistInfo));
+          localStorage.setItem("currentAlbum", JSON.stringify(albums[i]));
+          localStorage.setItem("currentArtist", JSON.stringify(artistInfo));
         });
 
         albumContainer?.appendChild(albumCard);
@@ -40,6 +41,6 @@ async function showAllAlbums(albums: Album) {
   }
 }
 
-showAllAlbums(albums); 
+showAllAlbums(allAlbums);
 
-export { showAllAlbums, defaultCover };
+export { showAllAlbums, allAlbums, defaultCover };
