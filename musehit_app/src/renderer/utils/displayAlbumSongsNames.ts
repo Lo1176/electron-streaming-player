@@ -5,8 +5,8 @@
 import { Album, Artist, Song } from "./../renderer";
 import { defaultCover } from "./showAllAlbums";
 // import { currentArtist, currentAlbum } from "./showAllAlbums";
-const currentAlbum: Album = JSON.parse(localStorage.getItem('currentAlbum'));
-const currentArtist: Artist = JSON.parse(localStorage.getItem('currentArtist'));
+const currentAlbum: Album = JSON.parse(localStorage.getItem("currentAlbum"));
+const currentArtist: Artist = JSON.parse(localStorage.getItem("currentArtist"));
 
 let allSongsFromCurrentAlbum: Song = undefined;
 let totalTracks = undefined;
@@ -18,9 +18,11 @@ let currentSong: {
 };
 
 const songsList = document.getElementById("songs-list");
-const displayAlbum = document.getElementById("selected-album-container")
+const displayAlbum = document.getElementById("selected-album-container");
 // display selected album
-const albumCard = document.createElement("div") ? document.createElement("div") : null;
+const albumCard = document.createElement("div")
+  ? document.createElement("div")
+  : null;
 const cover = currentAlbum.cover !== "NULL" ? currentAlbum.cover : defaultCover;
 // <a id='album_${currentAlbum}' href="#songs-list">
 if (!!albumCard) {
@@ -33,20 +35,23 @@ if (!!albumCard) {
   <p>${versions.findAllSongsByAlbumID(currentAlbum.id).length} titres</p>
   </div>
   </a>
-  `;}
-  displayAlbum?.appendChild(albumCard);
-function displayTotalAlbumTime() {}
+  `;
+}
+displayAlbum?.appendChild(albumCard);
+// function displayTotalAlbumTime() {} // nice to have
 function displayAlbumSongsNames(album: Album) {
   // 1. show selected album title + ... ${album.cover} .release_date .name .artist_id ...
-  allSongsFromCurrentAlbum = !!album ? versions.findAllSongsByAlbumID(album.id) : null;
+  allSongsFromCurrentAlbum = !!album
+    ? versions.findAllSongsByAlbumID(album.id)
+    : null;
   totalTracks = allSongsFromCurrentAlbum.length;
-  
+
   // if (!!songsList) songsList.innerHTML = "";
-  const divAllSongs = document.createElement("div")
-  divAllSongs.classList.add("display-all-songs")
-  
+  const divAllSongs = document.createElement("div");
+  divAllSongs.classList.add("display-all-songs");
+
   // divAllSongs.setAttribute("id", "theSongList"); // maybe add a class but not an id
-  
+
   // list all allSongsFromCurrentAlbum
   for (let i = 0; i < allSongsFromCurrentAlbum.length; i++) {
     const divSong = document.createElement("div");
@@ -57,10 +62,10 @@ function displayAlbumSongsNames(album: Album) {
         <img class="album-cover album-cover-thumb" src='./../../public/uploads/${album.cover}' alt="album cover">
       </div>
       <p class="song-name">${allSongsFromCurrentAlbum[i].name}</p>
-      `
-      
+      `;
+
     const btnOver = document.getElementById("btn-over") as HTMLElement;
-    
+
     divSong.addEventListener("click", () => {
       currentSong = allSongsFromCurrentAlbum[i];
       playThisSong();
@@ -86,7 +91,9 @@ if (!!songsList) displayAlbumSongsNames(currentAlbum);
 const footerPlayer = document.getElementById(
   "footer-player"
 ) as HTMLImageElement;
-const playBtn = document.getElementById("play")? document.getElementById("play") as HTMLImageElement : null;
+const playBtn = document.getElementById("play")
+  ? (document.getElementById("play") as HTMLImageElement)
+  : null;
 const playIcon = "./../../src/images/play-btn.svg";
 const pauseIcon = "./../../src/images/pause-btn.svg";
 // playBtn.innerHTML = `<i>${playIcon}</i>`;
@@ -112,7 +119,7 @@ if (!!playBtn) {
   playBtn.addEventListener("click", () => {
     // is the song  playing ?
     const isPlaying = footerPlayer.classList.contains("play");
-    
+
     isPlaying ? pauseSong() : playSong();
   });
 }
@@ -168,26 +175,25 @@ if (!!nextBtn) {
 
 // Count down => time left
 if (!!audioPlayer) {
-
   audioPlayer.addEventListener(
     "timeupdate",
-  function () {
-    var timeLeftElement = document.getElementById("time-left"),
-    songDuration = audioPlayer.duration,
-    currentTime = audioPlayer.currentTime,
-    timeLeft = songDuration - currentTime,
-    s: string | number,
-    m: string | number;
-    
-    s = Math.floor(timeLeft) % 60;
-    m = Math.floor(timeLeft / 60) % 60;
-    
-    s = s < 10 ? "0" + s : s;
-    m = m < 10 ? "0" + m : m;
-    
-    timeLeftElement.innerHTML = m + ":" + s;
-  },
-  false
+    function () {
+      var timeLeftElement = document.getElementById("time-left"),
+        songDuration = audioPlayer.duration,
+        currentTime = audioPlayer.currentTime,
+        timeLeft = songDuration - currentTime,
+        s: string | number,
+        m: string | number;
+
+      s = Math.floor(timeLeft) % 60;
+      m = Math.floor(timeLeft / 60) % 60;
+
+      s = s < 10 ? "0" + s : s;
+      m = m < 10 ? "0" + m : m;
+
+      timeLeftElement.innerHTML = m + ":" + s;
+    },
+    false
   );
 }
 
@@ -207,9 +213,9 @@ if (!!audioPlayer) {
       updateProgressBar(audioPlayer.currentTime, audioPlayer.duration);
     },
     false
-    );
-  }
-    
+  );
+}
+
 // Next song
 function nextSong() {
   let position = (currentSong.position += 1);
@@ -251,24 +257,19 @@ function updateProgressBar(currentTime: number, songDuration: number) {
 }
 
 if (!!progressContainer) {
-
   progressContainer.addEventListener("click", playHere);
   // if we click on the progress bar we can it must change the currentTime
   function playHere(e: { offsetX: any }) {
     const width = this.clientWidth;
     const clickX = e.offsetX;
     const duration = audioPlayer.duration;
-    
+
     audioPlayer.currentTime = (clickX / width) * duration;
   }
 }
-  
+
 if (!!audioPlayer) audioPlayer.addEventListener("ended", nextSong);
 
 export { playThisSong };
 
-export {
-  displayAlbumSongsNames,
-  totalTracks,
-  allSongsFromCurrentAlbum,
-};
+export { displayAlbumSongsNames, totalTracks, allSongsFromCurrentAlbum };

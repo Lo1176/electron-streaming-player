@@ -6,10 +6,14 @@
     "dev": "electron-esbuild dev",
     "start": "nodemon --watch src/ --exec yarn dev",
     "build": "electron-esbuild build",
-    "package": "electron-builder"
+    "package": "electron-builder",
+    "test": "jest"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.22.11",
     "@electron/rebuild": "^3.2.10",
+    "@jest/globals": "^29.6.4",
+    "@types/jest": "^29.5.4",
     "@types/node": "16.x",
     "aws-sdk": "^2.1314.0",
     "electron": "22.x",
@@ -17,10 +21,12 @@
     "electron-esbuild": "^7.0.0",
     "electron-util": "0.17.x",
     "esbuild": "0.16.x",
+    "jest": "^29.6.4",
     "mock-aws-s3": "^4.0.2",
     "nock": "^13.3.0",
     "node-pre-gyp": "0.12.0",
     "nodemon": "^2.0.22",
+    "ts-jest": "^29.1.1",
     "typescript": "4.9.x"
   },
   "build": {
