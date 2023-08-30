@@ -12,6 +12,7 @@ module.exports = {
     path.resolve('src/renderer/utils/dragAndDrop.ts'),
     path.resolve('src/renderer/utils/searchBarFunction.ts'),
     path.resolve('src/renderer/utils/showAllAlbums.ts'),
+    path.resolve('src/renderer/utils/playerFunctions.ts'),
   ],
   bundle: true,
   target: 'chrome89', // electron version target
