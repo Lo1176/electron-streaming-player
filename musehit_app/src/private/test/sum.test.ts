@@ -6,3 +6,7 @@ describe("sum module", () => {
     expect(sum(1, 2)).toBe(3);
   });
 });
+
+/* [ROMAIN]
+  pas sûr que ce test nous intéresse beaucoup !
+*/

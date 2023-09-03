@@ -90,3 +90,8 @@ function displayAlbumSongsNames(album: Album) {
 if (!!songsList) displayAlbumSongsNames(currentAlbum);
 
 export { displayAlbumSongsNames, totalTracks };
+
+
+/* [ROMAIN]
+ cette copy doit-elle rester là ? 
+*/

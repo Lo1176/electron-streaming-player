@@ -46,3 +46,11 @@ describe("show All Albums from db limit 9", () => {
     expect(console.log(showAllAlbums(testAlbums))).toEqual(4);
   });
 });
+/* [ROMAIN]
+ Ce test fail quand tu lances les tests ! Dommage car c'est ton seul test !
+la définition de ta fonction showAllAlbums n'a pas de return, donc renvoie undefined.
+ aussi console.log(4) != 4
+ et sûrement qu'en .ts (c'est le principe) "4" != 4
+
+ bref, ce test est à repenser !
+*/

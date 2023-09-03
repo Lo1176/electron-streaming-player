@@ -92,3 +92,7 @@ ipcMain.on('ondragstart', (event, filePath) => {
 //     win.webContents.send("userData", data);
 //   });
 // });
+
+/* [ROMAIN]
+  pense à nettoyer les commentaires dont tu ne feras plus usage
+*/

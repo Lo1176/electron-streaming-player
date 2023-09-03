@@ -33,6 +33,14 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     const album = db
       .prepare(`SELECT * FROM albums WHERE LOWER("name") = LOWER('${album_name}')`)
       .all();
+/* [ROMAIN]
+il y avait aussi la syntaxe de la doc que tu pouvais utiliser et que 
+tu utilises d'ailleurs quelques fois à la fin. il n'y aurait plus le 
+problème des doubles quotes non plus.
+la syntaxe :
+const stmt = db.prepare('SELECT * FROM cats WHERE name = ?');
+const cats = stmt.all('Joey');
+*/
     return album[0];
   },
 
@@ -92,13 +100,26 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
 
   findSongByName: (name: string) => {
     /** PROBLEMS HERE when having a ' inside the name  */
+    /* [ROMAIN]
+    PROBLEMS HERE would be resolve if your were using better-sqlite-3 syntax
+    (see upper) also it would prevent you from risking SQL injections 
+    by properly using the ORM. 
+    */
     const song = db.prepare(`SELECT * FROM songs WHERE name = '${name}'`).all();
     return !!song && song[0];
   },
 
   findSongById: (id: string) => {
     const song = db.prepare(`SELECT * FROM songs WHERE id = ${id}`);
+    /* [ROMAIN]
+     ici tu n'utilises pas .all(),  !!song doit être souvent false !
+    */
     return !!song && song[0];
+    /* [ROMAIN]
+      et j'imagine que c'est pour cette raison que tu t'es mis à utiliser 
+      cette syntaxe au return.
+      en effet [][0] == undefined mais undefined[0] == ERROR
+    */
   },
 
   findSongByAlbumIdAndSongName: (album_id: string, song_name: string) => {
@@ -212,6 +233,15 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     } else {
       CopyNewSong();
     }
+/* [ROMAIN]
+ puisque quoiqu'il arrive tu copies NewSong, ne te répètes pas: 
+ if (!ensurePathExistence(dirPath)) {
+   createDirectory(dirPath);
+ }
+ CopyNewSong();
+
+*/
+
   },
 
   formattedName(name: string) {
@@ -226,3 +256,7 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     console.log("l'image a été créé, path: ", path, "\ncover: ", cover);
   },
 });
+
+/* [ROMAIN]
+  passer la voiture-balai pour les console log !
+*/

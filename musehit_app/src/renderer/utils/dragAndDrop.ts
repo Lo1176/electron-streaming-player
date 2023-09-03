@@ -13,6 +13,13 @@ const dragAndDrop = () => {
   ) as HTMLElement;
 
   const replaceSingleQuote = (stringName: string) => stringName.replace("'", " ")
+  /* [ROMAIN]
+    pourquoi "Don't stop me now" devrait s'appeler "Don t stop me now "?
+    si tu passais par l'ORM dans ton preload tu n'aurais pas de souci. 
+
+    aussi si le tag album ou title n'est pas défini tu va avoir une erreur 
+    et l'utilisateur ne saura pas ce qu'il a mal fait !
+  */
 
   dragAndDropContainer.addEventListener("drop", (event) => {
     event.preventDefault();
@@ -38,7 +45,17 @@ const dragAndDrop = () => {
             const albumTitleFromDragAndDrop = replaceSingleQuote(tag.tags.album);
             const releaseDate = tag.tags.year ? tag.tags.year : "";
             const genre = tag.tags.genre !== " " ? tag.tags.genre : " ";
+            /* [ROMAIN]
+            pourquoi ce " " plutôt que "" ?
+            (en modifiant la syntaxe pour la copier sur year par exemple)
+            */
             const disk = tag.tags.volume?.disk ? tag.tags.volume?.disk : "1";
+            /* [ROMAIN]
+             si tu es arrivé dans la deuxième partie de ton expression, volume existe 
+             et tu peux donc enlever le ? 
+             i.e :
+             const disk = tag.tags.volume?.disk ? tag.tags.volume.disk : "1";
+            */
             const coverFromMetaData = tag.tags.picture;
             const formattedAlbumName = versions.formattedName(
               albumTitleFromDragAndDrop
@@ -213,7 +230,11 @@ const dragAndDrop = () => {
                  *  next step 2/b
                  * */
                 createArtist(artistNameFromDragAndDrop);
-
+/* [ROMAIN]
+  peut-être rajouter un await a createArtist, c'est normalement quasi instantané 
+  mais il n'est pas impossible que ton findArtistByName ne trouve pas le NewArtist 
+  si l'opération n'est pas terminée
+*/
                 const newArtist = versions.findArtistByName(
                   artistNameFromDragAndDrop
                 );
@@ -292,3 +313,8 @@ const dragAndDrop = () => {
 }
 
 dragAndDrop();
+
+/* [ROMAIN]
+ un peu de refacto ne ferait pas de mal. 
+ de manière générale et complètement arbitrairement, il faut éviter les fichiers de plus de 100lignes.
+*/

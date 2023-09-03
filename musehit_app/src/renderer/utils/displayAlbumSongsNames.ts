@@ -23,9 +23,18 @@ const displayAlbum = document.getElementById("selected-album-container");
 const albumCard = document.createElement("div")
   ? document.createElement("div")
   : null;
+/* [ROMAIN]
+  const albumCard = document.createElement("div")
+  me suffirait. pas de ternaire quand tu es sûr que ton truc va être vrai
+  là tu dis : "si je réussi à créer un élément, je crée un nouvel élément que je me renvoie"
+  et tu en crées un de trop
+*/
 const cover = currentAlbum.cover !== "NULL" ? currentAlbum.cover : defaultCover;
 // <a id='album_${currentAlbum}' href="#songs-list">
 if (!!albumCard) {
+/* [ROMAIN]
+ vraiment je ne vois pas comment cette !!albumCard pourrait valloir false 
+*/
   albumCard.innerHTML = `
   <div class="album-page-card">
   <img class="album-cover" src="./../../public/uploads/${cover}" alt="album cover">
@@ -79,9 +88,14 @@ function displayAlbumSongsNames(album: Album) {
     divAllSongs.appendChild(divSong);
   }
 
+
   songsList.appendChild(divAllSongs); // add ul to the container.
   return totalTracks;
 }
+/* [ROMAIN]
+  tu peux sortir cette fonction displayAlbumSongsNames de ce fichier
+  (elle fait 43lignes)
+*/
 
 if (!!songsList) displayAlbumSongsNames(currentAlbum);
 
@@ -273,3 +287,10 @@ if (!!audioPlayer) audioPlayer.addEventListener("ended", nextSong);
 export { playThisSong };
 
 export { displayAlbumSongsNames, totalTracks, allSongsFromCurrentAlbum };
+
+
+/* [ROMAIN] 
+  je trouve particulièrement violent de reinstancier tout le player à chaque fois que tu cliques sur un nouvel 
+  album. ça a aussi l'inconvénient de ne pas le rendre persistant quand tu te balades dans ton app ! 
+  
+*/
