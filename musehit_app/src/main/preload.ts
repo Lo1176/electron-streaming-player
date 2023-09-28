@@ -1,10 +1,10 @@
-import { contextBridge } from 'electron';
-const db = require('better-sqlite3')('./resources/jukebox.db');
-const fs = require('fs');
+import { contextBridge } from "electron";
+const db = require("better-sqlite3")("./resources/jukebox.db");
+const fs = require("fs");
 
 function formattedName(name: string) {
-    return name.toLowerCase().split(" ").join("-");
-  }
+  return name.toLowerCase().split(" ").join("-");
+}
 
 export let versions: any = contextBridge.exposeInMainWorld("versions", {
   findAllFeatures: () => {
@@ -28,22 +28,6 @@ export let versions: any = contextBridge.exposeInMainWorld("versions", {
     return rows;
   },
 
-  findAlbumByName: (album_name: string) => {
-    // beware: use simple quote and not double quote
-    const album = db
-      .prepare(`SELECT * FROM albums WHERE LOWER("name") = LOWER('${album_name}')`)
-      .all();
-/* [ROMAIN]
-il y avait aussi la syntaxe de la doc que tu pouvais utiliser et que 
-tu utilises d'ailleurs quelques fois à la fin. il n'y aurait plus le 
-problème des doubles quotes non plus.
-la syntaxe :
-const stmt = db.prepare('SELECT * FROM cats WHERE name = ?');
-const cats = stmt.all('Joey');
-*/
-    return album[0];
-  },
-
   searchByAlbums(inputString: string) {
     const albums = db
       .prepare(
@@ -52,74 +36,59 @@ const cats = stmt.all('Joey');
       .all();
     return albums;
   },
-  
+
   searchByArtists(inputString: string) {
     const albums = db
-    .prepare(
-      `SELECT * FROM albums INNER JOIN artists WHERE LOWER(artists.name) LIKE LOWER('%${inputString}%') AND artists.id=albums.artist_id`
+      .prepare(
+        `SELECT * FROM albums INNER JOIN artists WHERE LOWER(artists.name) LIKE LOWER('%${inputString}%') AND artists.id=albums.artist_id`
       )
       .all();
-      return albums;
-    },
-    
-    searchByReleaseDate(date: string) {
-      const albums = db
-        .prepare(
-          `SELECT * FROM albums WHERE albums.release_date LIKE '%${date}%'`
-        )
-        .all();
-      return albums;
-    },
+    return albums;
+  },
+
+  searchByReleaseDate(date: string) {
+    const albums = db
+      .prepare(
+        `SELECT * FROM albums WHERE albums.release_date LIKE '%${date}%'`
+      )
+      .all();
+    return albums;
+  },
 
   findAllAlbumsByArtistId: (id: string) => {
-    // beware: use simple quote and not double quote
-    const album = db
-      .prepare(`SELECT * FROM  albums WHERE artist_id = '${id}'`)
-      .all();
+    const stmt = db.prepare("SELECT * FROM albums WHERE artist_id = ?");
+    const album = stmt.all(id);
+
     return album;
   },
 
   findAlbumByArtistIdAndAlbumName: (artist_id: number, album_name: string) => {
     const album = db
       .prepare(
-        `SELECT * FROM  albums WHERE LOWER("name") = LOWER('${album_name}') AND artist_id = ${artist_id}`
+        `SELECT * FROM albums WHERE LOWER("name") = LOWER('${album_name}') AND artist_id = ${artist_id}`
       )
       .all();
     return album[0];
   },
 
   findAllSongsByAlbumID: (id: string) => {
-    // beware: use simple quote and not double quote
-    const songs = db
-      .prepare(
-        `SELECT * FROM songs WHERE album_id = ${id} ORDER BY position ASC;`
-      )
-      .all();
+    const stmt = db.prepare(
+      "SELECT * FROM songs WHERE album_id = ? ORDER BY position ASC;"
+    );
+    const songs = stmt.all(id);
     return songs;
   },
 
   findSongByName: (name: string) => {
-    /** PROBLEMS HERE when having a ' inside the name  */
-    /* [ROMAIN]
-    PROBLEMS HERE would be resolve if your were using better-sqlite-3 syntax
-    (see upper) also it would prevent you from risking SQL injections 
-    by properly using the ORM. 
-    */
-    const song = db.prepare(`SELECT * FROM songs WHERE name = '${name}'`).all();
+    const stmt = db.prepare("SELECT * FROM songs WHERE name = ?");
+    const song = stmt.all(name);
     return !!song && song[0];
   },
 
   findSongById: (id: string) => {
-    const song = db.prepare(`SELECT * FROM songs WHERE id = ${id}`);
-    /* [ROMAIN]
-     ici tu n'utilises pas .all(),  !!song doit être souvent false !
-    */
-    return !!song && song[0];
-    /* [ROMAIN]
-      et j'imagine que c'est pour cette raison que tu t'es mis à utiliser 
-      cette syntaxe au return.
-      en effet [][0] == undefined mais undefined[0] == ERROR
-    */
+    const stmt = db.prepare("SELECT * FROM songs WHERE id = ?");
+    const song = stmt.all(id);
+    return song[0];
   },
 
   findSongByAlbumIdAndSongName: (album_id: string, song_name: string) => {
@@ -128,8 +97,6 @@ const cats = stmt.all('Joey');
         `SELECT * FROM songs WHERE album_id = ${album_id} AND name = '${song_name}'; `
       )
       .all();
-    console.log("🚀 ~ file: preload.ts:78 ~ song:", song);
-
     return song[0];
   },
 
@@ -140,7 +107,7 @@ const cats = stmt.all('Joey');
     disk: string,
     genre: string,
     cover: string
-    ) => {
+  ) => {
     const newAlbum = db
       .prepare(
         "INSERT INTO albums ('name', 'artist_id', 'release_date', 'disk', 'genre', 'cover') VALUES (?, ?, ?, ?, ?, ?)"
@@ -152,18 +119,13 @@ const cats = stmt.all('Joey');
     return newAlbum;
   },
 
-  addSong: (
-    name: string, 
-    path: string, 
-    album_id: number, 
-    position: number
-    ) => {
+  addSong: (name: string, path: string, album_id: number, position: number) => {
     const newSong = db
       .prepare(
         `INSERT INTO songs ('name', 'path', 'album_id', 'position') VALUES (?, ?, ?, ?)`
       )
       .run(name, path, album_id, position);
-    console.log(`we've just created a new song named ${name}\n here ${path}`);
+    // console.log(`we've just created a new song named ${name}\n here ${path}`);
     return newSong;
   },
 
@@ -183,7 +145,9 @@ const cats = stmt.all('Joey');
   },
 
   addArtist: (name: string) => {
-    const newArtist = db.prepare(`INSERT INTO artists (name) VALUES (?);`).run(name);
+    const newArtist = db
+      .prepare(`INSERT INTO artists (name) VALUES (?);`)
+      .run(name);
     return newArtist;
   },
 
@@ -229,19 +193,9 @@ const cats = stmt.all('Joey');
         `***** le repertoire n'existe pas je le fabrique avec mes petits doigts boudinés:\ndirPath: ${dirPath}`
       );
       createDirectory(dirPath);
-      CopyNewSong();
-    } else {
-      CopyNewSong();
+      // CopyNewSong();
     }
-/* [ROMAIN]
- puisque quoiqu'il arrive tu copies NewSong, ne te répètes pas: 
- if (!ensurePathExistence(dirPath)) {
-   createDirectory(dirPath);
- }
- CopyNewSong();
-
-*/
-
+    CopyNewSong();
   },
 
   formattedName(name: string) {
@@ -256,7 +210,4 @@ const cats = stmt.all('Joey');
     console.log("l'image a été créé, path: ", path, "\ncover: ", cover);
   },
 });
-
-/* [ROMAIN]
-  passer la voiture-balai pour les console log !
-*/
+("je refais un essai pourquoi");
