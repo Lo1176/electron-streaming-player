@@ -20,22 +20,14 @@ let currentSong: {
 const songsList = document.getElementById("songs-list");
 const displayAlbum = document.getElementById("selected-album-container");
 // display selected album
-const albumCard = document.createElement("div")
-  ? document.createElement("div")
-  : null;
-/* [ROMAIN]
-  const albumCard = document.createElement("div")
-  me suffirait. pas de ternaire quand tu es sûr que ton truc va être vrai
-  là tu dis : "si je réussi à créer un élément, je crée un nouvel élément que je me renvoie"
-  et tu en crées un de trop
-*/
+const albumCard = document.createElement("div");
 const cover = currentAlbum.cover !== "NULL" ? currentAlbum.cover : defaultCover;
 // <a id='album_${currentAlbum}' href="#songs-list">
-if (!!albumCard) {
+// if (!!albumCard) {
 /* [ROMAIN]
- vraiment je ne vois pas comment cette !!albumCard pourrait valloir false 
+ vraiment je ne vois pas comment cette !!albumCard pourrait valoir false 
 */
-  albumCard.innerHTML = `
+albumCard.innerHTML = `
   <div class="album-page-card">
   <img class="album-cover" src="./../../public/uploads/${cover}" alt="album cover">
   <div class="album-page-content">
@@ -45,7 +37,7 @@ if (!!albumCard) {
   </div>
   </a>
   `;
-}
+// }
 displayAlbum?.appendChild(albumCard);
 // function displayTotalAlbumTime() {} // nice to have
 function displayAlbumSongsNames(album: Album) {
@@ -87,7 +79,6 @@ function displayAlbumSongsNames(album: Album) {
 
     divAllSongs.appendChild(divSong);
   }
-
 
   songsList.appendChild(divAllSongs); // add ul to the container.
   return totalTracks;
@@ -287,7 +278,6 @@ if (!!audioPlayer) audioPlayer.addEventListener("ended", nextSong);
 export { playThisSong };
 
 export { displayAlbumSongsNames, totalTracks, allSongsFromCurrentAlbum };
-
 
 /* [ROMAIN] 
   je trouve particulièrement violent de reinstancier tout le player à chaque fois que tu cliques sur un nouvel 
